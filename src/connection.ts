@@ -10,7 +10,7 @@ import {
 } from './utils';
 import { buildWsFatalInsight, buildWsSuccessAfterFailureInsight, postInsights } from './insights';
 import { ConnectAPIResponse, ConnectionOpen, ExtendableGenerics, DefaultGenerics, UR, LogLevel } from './types';
-import { StreamChat } from './client';
+import { ErmisChat } from './client';
 
 // Type guards to check WebSocket error type
 const isCloseEvent = (res: WebSocket.CloseEvent | WebSocket.Data | WebSocket.ErrorEvent): res is WebSocket.CloseEvent =>
@@ -36,13 +36,13 @@ const isErrorEvent = (res: WebSocket.CloseEvent | WebSocket.Data | WebSocket.Err
  * - state can be recovered by querying the channel again
  * - if the servers fails to publish a message to the client, the WS connection is destroyed
  */
-export class StableWSConnection<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> {
+export class StableWSConnection<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> {
   // global from constructor
-  client: StreamChat<StreamChatGenerics>;
+  client: ErmisChat<ErmisChatGenerics>;
 
   // local vars
   connectionID?: string;
-  connectionOpen?: ConnectAPIResponse<StreamChatGenerics>;
+  connectionOpen?: ConnectAPIResponse<ErmisChatGenerics>;
   consecutiveFailures: number;
   pingInterval: number;
   healthCheckTimeoutRef?: NodeJS.Timeout;
@@ -57,13 +57,13 @@ export class StableWSConnection<StreamChatGenerics extends ExtendableGenerics = 
     reason?: Error & { code?: string | number; isWSFailure?: boolean; StatusCode?: string | number },
   ) => void;
   requestID: string | undefined;
-  resolvePromise?: (value: ConnectionOpen<StreamChatGenerics>) => void;
+  resolvePromise?: (value: ConnectionOpen<ErmisChatGenerics>) => void;
   totalFailures: number;
   ws?: WebSocket;
   wsID: number;
 
-  constructor({ client }: { client: StreamChat<StreamChatGenerics> }) {
-    /** StreamChat client */
+  constructor({ client }: { client: ErmisChat<ErmisChatGenerics> }) {
+    /** ErmisChat client */
     this.client = client;
     /** consecutive failures influence the duration of the timeout */
     this.consecutiveFailures = 0;
@@ -92,7 +92,7 @@ export class StableWSConnection<StreamChatGenerics extends ExtendableGenerics = 
     this.client.logger(level, 'connection:' + msg, { tags: ['connection'], ...extra });
   }
 
-  setClient(client: StreamChat<StreamChatGenerics>) {
+  setClient(client: ErmisChat<ErmisChatGenerics>) {
     this.client = client;
   }
 
@@ -575,7 +575,7 @@ export class StableWSConnection<StreamChatGenerics extends ExtendableGenerics = 
   _setupConnectionPromise = () => {
     this.isResolved = false;
     /** a promise that is resolved once ws.open is called */
-    this.connectionOpen = new Promise<ConnectionOpen<StreamChatGenerics>>((resolve, reject) => {
+    this.connectionOpen = new Promise<ConnectionOpen<ErmisChatGenerics>>((resolve, reject) => {
       this.resolvePromise = resolve;
       this.rejectPromise = reject;
     });

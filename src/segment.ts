@@ -1,4 +1,4 @@
-import { StreamChat } from './client';
+import { ErmisChat } from './client';
 import {
   DefaultGenerics,
   ExtendableGenerics,
@@ -16,13 +16,13 @@ type SegmentUpdatableFields = {
   name?: string;
 };
 
-export class Segment<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> {
+export class Segment<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> {
   type: SegmentType;
   id: string | null;
-  client: StreamChat<StreamChatGenerics>;
+  client: ErmisChat<ErmisChatGenerics>;
   data?: SegmentData | SegmentResponse;
 
-  constructor(client: StreamChat<StreamChatGenerics>, type: SegmentType, id: string | null, data?: SegmentData) {
+  constructor(client: ErmisChat<ErmisChatGenerics>, type: SegmentType, id: string | null, data?: SegmentData) {
     this.client = client;
     this.type = type;
     this.id = id;

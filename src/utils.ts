@@ -65,10 +65,10 @@ function isFileWebAPI(uri: unknown): uri is File {
   return typeof window !== 'undefined' && 'File' in window && uri instanceof File;
 }
 
-export function isOwnUser<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics>(
-  user?: OwnUserResponse<StreamChatGenerics> | UserResponse<StreamChatGenerics>,
-): user is OwnUserResponse<StreamChatGenerics> {
-  return (user as OwnUserResponse<StreamChatGenerics>)?.total_unread_count !== undefined;
+export function isOwnUser<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics>(
+  user?: OwnUserResponse<ErmisChatGenerics> | UserResponse<ErmisChatGenerics>,
+): user is OwnUserResponse<ErmisChatGenerics> {
+  return (user as OwnUserResponse<ErmisChatGenerics>)?.total_unread_count !== undefined;
 }
 
 function isBlobWebAPI(uri: unknown): uri is Blob {
@@ -226,8 +226,8 @@ export function isOnline() {
     typeof navigator !== 'undefined'
       ? navigator
       : typeof window !== 'undefined' && window.navigator
-      ? window.navigator
-      : undefined;
+        ? window.navigator
+        : undefined;
 
   if (!nav) {
     console.warn('isOnline failed to access window.navigator and assume browser is online');
@@ -262,7 +262,7 @@ export function removeConnectionEventListeners(cb: (e: Event) => void) {
 export const axiosParamsSerializer: AxiosRequestConfig['paramsSerializer'] = (params) => {
   const newParams = [];
   for (const k in params) {
-    // Stream backend doesn't treat "undefined" value same as value not being present.
+    // Ermis backend doesn't treat "undefined" value same as value not being present.
     // So, we need to skip the undefined values.
     if (params[k] === undefined) continue;
 
@@ -280,12 +280,12 @@ export const axiosParamsSerializer: AxiosRequestConfig['paramsSerializer'] = (pa
  * formatMessage - Takes the message object. Parses the dates, sets __html
  * and sets the status to received if missing. Returns a message object
  *
- * @param {MessageResponse<StreamChatGenerics>} message a message object
+ * @param {MessageResponse<ErmisChatGenerics>} message a message object
  *
  */
-export function formatMessage<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics>(
-  message: MessageResponse<StreamChatGenerics>,
-): FormatMessageResponse<StreamChatGenerics> {
+export function formatMessage<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics>(
+  message: MessageResponse<ErmisChatGenerics>,
+): FormatMessageResponse<ErmisChatGenerics> {
   return {
     ...message,
     /**
@@ -305,9 +305,9 @@ export function formatMessage<StreamChatGenerics extends ExtendableGenerics = De
   };
 }
 
-export function addToMessageList<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics>(
-  messages: Array<FormatMessageResponse<StreamChatGenerics>>,
-  message: FormatMessageResponse<StreamChatGenerics>,
+export function addToMessageList<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics>(
+  messages: Array<FormatMessageResponse<ErmisChatGenerics>>,
+  message: FormatMessageResponse<ErmisChatGenerics>,
   timestampChanged = false,
   sortBy: 'pinned_at' | 'created_at' = 'created_at',
   addIfDoesNotExist = true,

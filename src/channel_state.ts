@@ -16,12 +16,12 @@ import {
 } from './types';
 import { addToMessageList } from './utils';
 
-type ChannelReadStatus<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = Record<
+type ChannelReadStatus<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = Record<
   string,
   {
     last_read: Date;
     unread_messages: number;
-    user: UserResponse<StreamChatGenerics>;
+    user: UserResponse<ErmisChatGenerics>;
     first_unread_message_id?: string;
     last_read_message_id?: string;
   }
@@ -30,19 +30,19 @@ type ChannelReadStatus<StreamChatGenerics extends ExtendableGenerics = DefaultGe
 /**
  * ChannelState - A container class for the channel state.
  */
-export class ChannelState<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> {
-  _channel: Channel<StreamChatGenerics>;
+export class ChannelState<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> {
+  _channel: Channel<ErmisChatGenerics>;
   watcher_count: number;
-  typing: Record<string, Event<StreamChatGenerics>>;
-  read: ChannelReadStatus<StreamChatGenerics>;
-  pinnedMessages: Array<ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>>;
-  pending_messages: Array<PendingMessageResponse<StreamChatGenerics>>;
-  threads: Record<string, Array<ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>>>;
-  mutedUsers: Array<UserResponse<StreamChatGenerics>>;
-  watchers: Record<string, UserResponse<StreamChatGenerics>>;
-  members: Record<string, ChannelMemberResponse<StreamChatGenerics>>;
+  typing: Record<string, Event<ErmisChatGenerics>>;
+  read: ChannelReadStatus<ErmisChatGenerics>;
+  pinnedMessages: Array<ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>>;
+  pending_messages: Array<PendingMessageResponse<ErmisChatGenerics>>;
+  threads: Record<string, Array<ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>>>;
+  mutedUsers: Array<UserResponse<ErmisChatGenerics>>;
+  watchers: Record<string, UserResponse<ErmisChatGenerics>>;
+  members: Record<string, ChannelMemberResponse<ErmisChatGenerics>>;
   unreadCount: number;
-  membership: ChannelMembership<StreamChatGenerics>;
+  membership: ChannelMembership<ErmisChatGenerics>;
   last_message_at: Date | null;
   /**
    * Flag which indicates if channel state contain latest/recent messages or no.
@@ -60,9 +60,9 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
   messageSets: {
     isCurrent: boolean;
     isLatest: boolean;
-    messages: Array<ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>>;
+    messages: Array<ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>>;
   }[] = [];
-  constructor(channel: Channel<StreamChatGenerics>) {
+  constructor(channel: Channel<ErmisChatGenerics>) {
     this._channel = channel;
     this.watcher_count = 0;
     this.typing = {};
@@ -91,7 +91,7 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
     return this.messageSets.find((s) => s.isCurrent)?.messages || [];
   }
 
-  set messages(messages: Array<ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>>) {
+  set messages(messages: Array<ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>>) {
     const index = this.messageSets.findIndex((s) => s.isCurrent);
     this.messageSets[index].messages = messages;
   }
@@ -104,7 +104,7 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
     return this.messageSets.find((s) => s.isLatest)?.messages || [];
   }
 
-  set latestMessages(messages: Array<ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>>) {
+  set latestMessages(messages: Array<ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>>) {
     const index = this.messageSets.findIndex((s) => s.isLatest);
     this.messageSets[index].messages = messages;
   }
@@ -112,13 +112,13 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
   /**
    * addMessageSorted - Add a message to the state
    *
-   * @param {MessageResponse<StreamChatGenerics>} newMessage A new message
+   * @param {MessageResponse<ErmisChatGenerics>} newMessage A new message
    * @param {boolean} timestampChanged Whether updating a message with changed created_at value.
    * @param {boolean} addIfDoesNotExist Add message if it is not in the list, used to prevent out of order updated messages from being added.
    * @param {MessageSetType} messageSetToAddToIfDoesNotExist Which message set to add to if message is not in the list (only used if addIfDoesNotExist is true)
    */
   addMessageSorted(
-    newMessage: MessageResponse<StreamChatGenerics>,
+    newMessage: MessageResponse<ErmisChatGenerics>,
     timestampChanged = false,
     addIfDoesNotExist = true,
     messageSetToAddToIfDoesNotExist: MessageSetType = 'latest',
@@ -136,10 +136,10 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
    * formatMessage - Takes the message object. Parses the dates, sets __html
    * and sets the status to received if missing. Returns a message object
    *
-   * @param {MessageResponse<StreamChatGenerics>} message a message object
+   * @param {MessageResponse<ErmisChatGenerics>} message a message object
    *
    */
-  formatMessage(message: MessageResponse<StreamChatGenerics>): FormatMessageResponse<StreamChatGenerics> {
+  formatMessage(message: MessageResponse<ErmisChatGenerics>): FormatMessageResponse<ErmisChatGenerics> {
     return {
       ...message,
       /**
@@ -157,7 +157,7 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
   /**
    * addMessagesSorted - Add the list of messages to state and resorts the messages
    *
-   * @param {Array<MessageResponse<StreamChatGenerics>>} newMessages A list of messages
+   * @param {Array<MessageResponse<ErmisChatGenerics>>} newMessages A list of messages
    * @param {boolean} timestampChanged Whether updating messages with changed created_at value.
    * @param {boolean} initializing Whether channel is being initialized.
    * @param {boolean} addIfDoesNotExist Add message if it is not in the list, used to prevent out of order updated messages from being added.
@@ -165,7 +165,7 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
    *
    */
   addMessagesSorted(
-    newMessages: MessageResponse<StreamChatGenerics>[],
+    newMessages: MessageResponse<ErmisChatGenerics>[],
     timestampChanged = false,
     initializing = false,
     addIfDoesNotExist = true,
@@ -186,11 +186,11 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
       // This will be true for messages that are already present at the state -> this happens when we perform merging of message sets
       // This will be also true for message previews used by some SDKs
       const isMessageFormatted = messagesToAdd[i].created_at instanceof Date;
-      let message: ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>;
+      let message: ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>;
       if (isMessageFormatted) {
-        message = messagesToAdd[i] as ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>;
+        message = messagesToAdd[i] as ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>;
       } else {
-        message = this.formatMessage(messagesToAdd[i] as MessageResponse<StreamChatGenerics>);
+        message = this.formatMessage(messagesToAdd[i] as MessageResponse<ErmisChatGenerics>);
 
         if (message.user && this._channel?.cid) {
           /**
@@ -262,10 +262,10 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
   /**
    * addPinnedMessages - adds messages in pinnedMessages property
    *
-   * @param {Array<MessageResponse<StreamChatGenerics>>} pinnedMessages A list of pinned messages
+   * @param {Array<MessageResponse<ErmisChatGenerics>>} pinnedMessages A list of pinned messages
    *
    */
-  addPinnedMessages(pinnedMessages: MessageResponse<StreamChatGenerics>[]) {
+  addPinnedMessages(pinnedMessages: MessageResponse<ErmisChatGenerics>[]) {
     for (let i = 0; i < pinnedMessages.length; i += 1) {
       this.addPinnedMessage(pinnedMessages[i]);
     }
@@ -274,10 +274,10 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
   /**
    * addPinnedMessage - adds message in pinnedMessages
    *
-   * @param {MessageResponse<StreamChatGenerics>} pinnedMessage message to update
+   * @param {MessageResponse<ErmisChatGenerics>} pinnedMessage message to update
    *
    */
-  addPinnedMessage(pinnedMessage: MessageResponse<StreamChatGenerics>) {
+  addPinnedMessage(pinnedMessage: MessageResponse<ErmisChatGenerics>) {
     this.pinnedMessages = this._addToMessageList(
       this.pinnedMessages,
       this.formatMessage(pinnedMessage),
@@ -289,17 +289,17 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
   /**
    * removePinnedMessage - removes pinned message from pinnedMessages
    *
-   * @param {MessageResponse<StreamChatGenerics>} message message to remove
+   * @param {MessageResponse<ErmisChatGenerics>} message message to remove
    *
    */
-  removePinnedMessage(message: MessageResponse<StreamChatGenerics>) {
+  removePinnedMessage(message: MessageResponse<ErmisChatGenerics>) {
     const { result } = this.removeMessageFromArray(this.pinnedMessages, message);
     this.pinnedMessages = result;
   }
 
   addReaction(
-    reaction: ReactionResponse<StreamChatGenerics>,
-    message?: MessageResponse<StreamChatGenerics>,
+    reaction: ReactionResponse<ErmisChatGenerics>,
+    message?: MessageResponse<ErmisChatGenerics>,
     enforce_unique?: boolean,
   ) {
     if (!message) return;
@@ -312,8 +312,8 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
   }
 
   _addOwnReactionToMessage(
-    ownReactions: ReactionResponse<StreamChatGenerics>[] | null | undefined,
-    reaction: ReactionResponse<StreamChatGenerics>,
+    ownReactions: ReactionResponse<ErmisChatGenerics>[] | null | undefined,
+    reaction: ReactionResponse<ErmisChatGenerics>,
     enforce_unique?: boolean,
   ) {
     if (enforce_unique) {
@@ -331,8 +331,8 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
   }
 
   _removeOwnReactionFromMessage(
-    ownReactions: ReactionResponse<StreamChatGenerics>[] | null | undefined,
-    reaction: ReactionResponse<StreamChatGenerics>,
+    ownReactions: ReactionResponse<ErmisChatGenerics>[] | null | undefined,
+    reaction: ReactionResponse<ErmisChatGenerics>,
   ) {
     if (ownReactions) {
       return ownReactions.filter((item) => item.user_id !== reaction.user_id || item.type !== reaction.type);
@@ -340,7 +340,7 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
     return ownReactions;
   }
 
-  removeReaction(reaction: ReactionResponse<StreamChatGenerics>, message?: MessageResponse<StreamChatGenerics>) {
+  removeReaction(reaction: ReactionResponse<ErmisChatGenerics>, message?: MessageResponse<ErmisChatGenerics>) {
     if (!message) return;
     const messageWithReaction = message;
     this._updateMessage(message, (msg) => {
@@ -350,14 +350,14 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
     return messageWithReaction;
   }
 
-  removeQuotedMessageReferences(message: MessageResponse<StreamChatGenerics>) {
-    const parseMessage = (m: ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>) =>
-      (({
-        ...m,
-        created_at: m.created_at.toISOString(),
-        pinned_at: m.pinned_at?.toISOString(),
-        updated_at: m.updated_at?.toISOString(),
-      } as unknown) as MessageResponse<StreamChatGenerics>);
+  removeQuotedMessageReferences(message: MessageResponse<ErmisChatGenerics>) {
+    const parseMessage = (m: ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>) =>
+    (({
+      ...m,
+      created_at: m.created_at.toISOString(),
+      pinned_at: m.pinned_at?.toISOString(),
+      updated_at: m.updated_at?.toISOString(),
+    } as unknown) as MessageResponse<ErmisChatGenerics>);
 
     this.messageSets.forEach((set) => {
       const updatedMessages = set.messages
@@ -382,8 +382,8 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
       show_in_channel?: boolean;
     },
     updateFunc: (
-      msg: ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>,
-    ) => ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>,
+      msg: ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>,
+    ) => ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>,
   ) {
     const { parent_id, show_in_channel, pinned } = message;
 
@@ -431,15 +431,15 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
   /**
    * _addToMessageList - Adds a message to a list of messages, tries to update first, appends if message isn't found
    *
-   * @param {Array<ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>>} messages A list of messages
+   * @param {Array<ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>>} messages A list of messages
    * @param message
    * @param {boolean} timestampChanged Whether updating a message with changed created_at value.
    * @param {string} sortBy field name to use to sort the messages by
    * @param {boolean} addIfDoesNotExist Add message if it is not in the list, used to prevent out of order updated messages from being added.
    */
   _addToMessageList(
-    messages: Array<ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>>,
-    message: ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>,
+    messages: Array<ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>>,
+    message: ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>,
     timestampChanged = false,
     sortBy: 'pinned_at' | 'created_at' = 'created_at',
     addIfDoesNotExist = true,
@@ -480,7 +480,7 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
   }
 
   removeMessageFromArray = (
-    msgArray: Array<ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>>,
+    msgArray: Array<ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>>,
     msg: { id: string; parent_id?: string },
   ) => {
     const result = msgArray.filter((message) => !(!!message.id && !!msg.id && message.id === msg.id));
@@ -490,8 +490,8 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
 
   // this handles the case when vote on poll is changed
   updatePollVote = (
-    pollVote: PollVote<StreamChatGenerics>,
-    poll: PollResponse<StreamChatGenerics>,
+    pollVote: PollVote<ErmisChatGenerics>,
+    poll: PollResponse<ErmisChatGenerics>,
     messageId: string,
   ) => {
     const message = this.findMessage(messageId);
@@ -514,13 +514,13 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
       ownVotes.push(pollVote);
     }
 
-    updatedPoll.own_votes = ownVotes as PollVote<StreamChatGenerics>[];
+    updatedPoll.own_votes = ownVotes as PollVote<ErmisChatGenerics>[];
     const newMessage = { ...message, poll: updatedPoll };
 
-    this.addMessageSorted((newMessage as unknown) as MessageResponse<StreamChatGenerics>, false, false);
+    this.addMessageSorted((newMessage as unknown) as MessageResponse<ErmisChatGenerics>, false, false);
   };
 
-  addPollVote = (pollVote: PollVote<StreamChatGenerics>, poll: PollResponse<StreamChatGenerics>, messageId: string) => {
+  addPollVote = (pollVote: PollVote<ErmisChatGenerics>, poll: PollResponse<ErmisChatGenerics>, messageId: string) => {
     const message = this.findMessage(messageId);
     if (!message) return;
 
@@ -533,15 +533,15 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
       ownVotes.push(pollVote);
     }
 
-    updatedPoll.own_votes = ownVotes as PollVote<StreamChatGenerics>[];
+    updatedPoll.own_votes = ownVotes as PollVote<ErmisChatGenerics>[];
     const newMessage = { ...message, poll: updatedPoll };
 
-    this.addMessageSorted((newMessage as unknown) as MessageResponse<StreamChatGenerics>, false, false);
+    this.addMessageSorted((newMessage as unknown) as MessageResponse<ErmisChatGenerics>, false, false);
   };
 
   removePollVote = (
-    pollVote: PollVote<StreamChatGenerics>,
-    poll: PollResponse<StreamChatGenerics>,
+    pollVote: PollVote<ErmisChatGenerics>,
+    poll: PollResponse<ErmisChatGenerics>,
     messageId: string,
   ) => {
     const message = this.findMessage(messageId);
@@ -558,13 +558,13 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
       }
     }
 
-    updatedPoll.own_votes = ownVotes as PollVote<StreamChatGenerics>[];
+    updatedPoll.own_votes = ownVotes as PollVote<ErmisChatGenerics>[];
 
     const newMessage = { ...message, poll: updatedPoll };
-    this.addMessageSorted((newMessage as unknown) as MessageResponse<StreamChatGenerics>, false, false);
+    this.addMessageSorted((newMessage as unknown) as MessageResponse<ErmisChatGenerics>, false, false);
   };
 
-  updatePoll = (poll: PollResponse<StreamChatGenerics>, messageId: string) => {
+  updatePoll = (poll: PollResponse<ErmisChatGenerics>, messageId: string) => {
     const message = this.findMessage(messageId);
     if (!message) return;
 
@@ -575,18 +575,18 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
 
     const newMessage = { ...message, poll: updatedPoll };
 
-    this.addMessageSorted((newMessage as unknown) as MessageResponse<StreamChatGenerics>, false, false);
+    this.addMessageSorted((newMessage as unknown) as MessageResponse<ErmisChatGenerics>, false, false);
   };
 
   /**
    * Updates the message.user property with updated user object, for messages.
    *
-   * @param {UserResponse<StreamChatGenerics>} user
+   * @param {UserResponse<ErmisChatGenerics>} user
    */
-  updateUserMessages = (user: UserResponse<StreamChatGenerics>) => {
+  updateUserMessages = (user: UserResponse<ErmisChatGenerics>) => {
     const _updateUserMessages = (
-      messages: Array<ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>>,
-      user: UserResponse<StreamChatGenerics>,
+      messages: Array<ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>>,
+      user: UserResponse<ErmisChatGenerics>,
     ) => {
       for (let i = 0; i < messages.length; i++) {
         const m = messages[i];
@@ -608,13 +608,13 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
   /**
    * Marks the messages as deleted, from deleted user.
    *
-   * @param {UserResponse<StreamChatGenerics>} user
+   * @param {UserResponse<ErmisChatGenerics>} user
    * @param {boolean} hardDelete
    */
-  deleteUserMessages = (user: UserResponse<StreamChatGenerics>, hardDelete = false) => {
+  deleteUserMessages = (user: UserResponse<ErmisChatGenerics>, hardDelete = false) => {
     const _deleteUserMessages = (
-      messages: Array<ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>>,
-      user: UserResponse<StreamChatGenerics>,
+      messages: Array<ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>>,
+      user: UserResponse<ErmisChatGenerics>,
       hardDelete = false,
     ) => {
       for (let i = 0; i < messages.length; i++) {
@@ -643,7 +643,7 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
             type: 'deleted',
             updated_at: m.updated_at,
             user: m.user,
-          } as unknown) as ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>;
+          } as unknown) as ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>;
         } else {
           messages[i] = {
             ...m,
@@ -690,7 +690,7 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
           cid: this._channel.cid,
           type: 'typing.stop',
           user: { id: userID },
-        } as Event<StreamChatGenerics>);
+        } as Event<ErmisChatGenerics>);
       }
     }
   }
@@ -749,7 +749,7 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
    * @param {string} messageId The id of the message
    * @param {string} parentMessageId The id of the parent message, if we want load a thread reply
    *
-   * @return {ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>} Returns the message, or undefined if the message wasn't found
+   * @return {ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>} Returns the message, or undefined if the message wasn't found
    */
   findMessage(messageId: string, parentMessageId?: string) {
     if (parentMessageId) {
@@ -785,13 +785,13 @@ export class ChannelState<StreamChatGenerics extends ExtendableGenerics = Defaul
   }
 
   private findTargetMessageSet(
-    newMessages: MessageResponse<StreamChatGenerics>[],
+    newMessages: MessageResponse<ErmisChatGenerics>[],
     addIfDoesNotExist = true,
     messageSetToAddToIfDoesNotExist: MessageSetType = 'current',
   ) {
     let messagesToAdd: (
-      | MessageResponse<StreamChatGenerics>
-      | ReturnType<ChannelState<StreamChatGenerics>['formatMessage']>
+      | MessageResponse<ErmisChatGenerics>
+      | ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>
     )[] = newMessages;
     let targetMessageSetIndex!: number;
     if (addIfDoesNotExist) {

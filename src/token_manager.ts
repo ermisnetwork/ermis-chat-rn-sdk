@@ -8,13 +8,13 @@ import { TokenOrProvider, ExtendableGenerics, DefaultGenerics, UserResponse } fr
  *
  * Handles all the operations around user token.
  */
-export class TokenManager<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> {
+export class TokenManager<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> {
   loadTokenPromise: Promise<string> | null;
   type: 'static' | 'provider';
   secret?: Secret;
   token?: string;
   tokenProvider?: TokenOrProvider;
-  user?: UserResponse<StreamChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
   /**
    * Constructor
    *
@@ -38,9 +38,9 @@ export class TokenManager<StreamChatGenerics extends ExtendableGenerics = Defaul
    * Token provider should return a token string or a promise which resolves to string token.
    *
    * @param {TokenOrProvider} tokenOrProvider
-   * @param {UserResponse<StreamChatGenerics>} user
+   * @param {UserResponse<ErmisChatGenerics>} user
    */
-  setTokenOrProvider = async (tokenOrProvider: TokenOrProvider, user: UserResponse<StreamChatGenerics>) => {
+  setTokenOrProvider = async (tokenOrProvider: TokenOrProvider, user: UserResponse<ErmisChatGenerics>) => {
     this.validateToken(tokenOrProvider, user);
     this.user = user;
 
@@ -73,7 +73,7 @@ export class TokenManager<StreamChatGenerics extends ExtendableGenerics = Defaul
   };
 
   // Validates the user token.
-  validateToken = (tokenOrProvider: TokenOrProvider, user: UserResponse<StreamChatGenerics>) => {
+  validateToken = (tokenOrProvider: TokenOrProvider, user: UserResponse<ErmisChatGenerics>) => {
     // allow empty token for anon user
     if (user && user.anon && !tokenOrProvider) return;
 

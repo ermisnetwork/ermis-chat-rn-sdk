@@ -75,7 +75,7 @@ export type APIResponse = {
   duration: string;
 };
 
-export type AppSettingsAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+export type AppSettingsAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
   app?: {
     // TODO
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -88,7 +88,7 @@ export type AppSettingsAPIResponse<StreamChatGenerics extends ExtendableGenerics
         automod_behavior?: ChannelConfigAutomodBehavior;
         automod_thresholds?: ChannelConfigAutomodThresholds;
         blocklist_behavior?: ChannelConfigAutomodBehavior;
-        commands?: CommandVariants<StreamChatGenerics>[];
+        commands?: CommandVariants<ErmisChatGenerics>[];
         connect_events?: boolean;
         created_at?: string;
         custom_events?: boolean;
@@ -192,62 +192,62 @@ export type FlagDetails = {
   automod?: AutomodDetails;
 };
 
-export type Flag<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type Flag<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   created_at: string;
   created_by_automod: boolean;
   updated_at: string;
   details?: FlagDetails;
-  target_message?: MessageResponse<StreamChatGenerics>;
-  target_user?: UserResponse<StreamChatGenerics>;
-  user?: UserResponse<StreamChatGenerics>;
+  target_message?: MessageResponse<ErmisChatGenerics>;
+  target_user?: UserResponse<ErmisChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
 };
 
-export type FlagsResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  flags?: Array<Flag<StreamChatGenerics>>;
+export type FlagsResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  flags?: Array<Flag<ErmisChatGenerics>>;
 };
 
-export type MessageFlagsResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+export type MessageFlagsResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
   flags?: Array<{
-    message: MessageResponse<StreamChatGenerics>;
-    user: UserResponse<StreamChatGenerics>;
+    message: MessageResponse<ErmisChatGenerics>;
+    user: UserResponse<ErmisChatGenerics>;
     approved_at?: string;
     created_at?: string;
     created_by_automod?: boolean;
     moderation_result?: ModerationResult;
     rejected_at?: string;
     reviewed_at?: string;
-    reviewed_by?: UserResponse<StreamChatGenerics>;
+    reviewed_by?: UserResponse<ErmisChatGenerics>;
     updated_at?: string;
   }>;
 };
 
-export type FlagReport<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type FlagReport<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   flags_count: number;
   id: string;
-  message: MessageResponse<StreamChatGenerics>;
-  user: UserResponse<StreamChatGenerics>;
+  message: MessageResponse<ErmisChatGenerics>;
+  user: UserResponse<ErmisChatGenerics>;
   created_at?: string;
   details?: FlagDetails;
-  first_reporter?: UserResponse<StreamChatGenerics>;
+  first_reporter?: UserResponse<ErmisChatGenerics>;
   review_result?: string;
   reviewed_at?: string;
-  reviewed_by?: UserResponse<StreamChatGenerics>;
+  reviewed_by?: UserResponse<ErmisChatGenerics>;
   updated_at?: string;
 };
 
-export type FlagReportsResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  flag_reports: Array<FlagReport<StreamChatGenerics>>;
+export type FlagReportsResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  flag_reports: Array<FlagReport<ErmisChatGenerics>>;
 };
 
-export type ReviewFlagReportResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  flag_report: FlagReport<StreamChatGenerics>;
+export type ReviewFlagReportResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  flag_report: FlagReport<ErmisChatGenerics>;
 };
 
-export type BannedUsersResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+export type BannedUsersResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
   bans?: Array<{
-    user: UserResponse<StreamChatGenerics>;
-    banned_by?: UserResponse<StreamChatGenerics>;
-    channel?: ChannelResponse<StreamChatGenerics>;
+    user: UserResponse<ErmisChatGenerics>;
+    banned_by?: UserResponse<ErmisChatGenerics>;
+    channel?: ChannelResponse<ErmisChatGenerics>;
     expires?: string;
     ip_ban?: boolean;
     reason?: string;
@@ -262,8 +262,8 @@ export type BlockListResponse = BlockList & {
 };
 
 export type ChannelResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = StreamChatGenerics['channelType'] & {
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = ErmisChatGenerics['channelType'] & {
   cid: string;
   disabled: boolean;
   frozen: boolean;
@@ -271,10 +271,10 @@ export type ChannelResponse<
   type: string;
   auto_translation_enabled?: boolean;
   auto_translation_language?: TranslationLanguages | '';
-  config?: ChannelConfigWithInfo<StreamChatGenerics>;
+  config?: ChannelConfigWithInfo<ErmisChatGenerics>;
   cooldown?: number;
   created_at?: string;
-  created_by?: UserResponse<StreamChatGenerics> | null;
+  created_by?: UserResponse<ErmisChatGenerics> | null;
   created_by_id?: string;
   deleted_at?: string;
   hidden?: boolean;
@@ -282,43 +282,43 @@ export type ChannelResponse<
   joined?: boolean;
   last_message_at?: string;
   member_count?: number;
-  members?: ChannelMemberResponse<StreamChatGenerics>[];
+  members?: ChannelMemberResponse<ErmisChatGenerics>[];
   muted?: boolean;
   name?: string;
   own_capabilities?: string[];
   team?: string;
   truncated_at?: string;
-  truncated_by?: UserResponse<StreamChatGenerics>;
+  truncated_by?: UserResponse<ErmisChatGenerics>;
   truncated_by_id?: string;
   updated_at?: string;
 };
 
 export type QueryReactionsOptions = Pager;
 
-export type QueryReactionsAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  reactions: ReactionResponse<StreamChatGenerics>[];
+export type QueryReactionsAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  reactions: ReactionResponse<ErmisChatGenerics>[];
   next?: string;
 };
 
-export type QueryChannelsAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  channels: Omit<ChannelAPIResponse<StreamChatGenerics>, keyof APIResponse>[];
+export type QueryChannelsAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  channels: Omit<ChannelAPIResponse<ErmisChatGenerics>, keyof APIResponse>[];
 };
 
-export type QueryChannelAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse &
-  ChannelAPIResponse<StreamChatGenerics>;
+export type QueryChannelAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse &
+  ChannelAPIResponse<ErmisChatGenerics>;
 
-export type ChannelAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  channel: ChannelResponse<StreamChatGenerics>;
-  members: ChannelMemberResponse<StreamChatGenerics>[];
-  messages: MessageResponse<StreamChatGenerics>[];
-  pinned_messages: MessageResponse<StreamChatGenerics>[];
+export type ChannelAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  channel: ChannelResponse<ErmisChatGenerics>;
+  members: ChannelMemberResponse<ErmisChatGenerics>[];
+  messages: MessageResponse<ErmisChatGenerics>[];
+  pinned_messages: MessageResponse<ErmisChatGenerics>[];
   hidden?: boolean;
-  membership?: ChannelMembership<StreamChatGenerics> | null;
-  pending_messages?: PendingMessageResponse<StreamChatGenerics>[];
-  read?: ReadResponse<StreamChatGenerics>[];
+  membership?: ChannelMembership<ErmisChatGenerics> | null;
+  pending_messages?: PendingMessageResponse<ErmisChatGenerics>[];
+  read?: ReadResponse<ErmisChatGenerics>[];
   threads?: ThreadResponse[];
   watcher_count?: number;
-  watchers?: UserResponse<StreamChatGenerics>[];
+  watchers?: UserResponse<ErmisChatGenerics>[];
 };
 
 export type ChannelUpdateOptions = {
@@ -326,11 +326,11 @@ export type ChannelUpdateOptions = {
   skip_push?: boolean;
 };
 
-export type ChannelMemberAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  members: ChannelMemberResponse<StreamChatGenerics>[];
+export type ChannelMemberAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  members: ChannelMemberResponse<ErmisChatGenerics>[];
 };
 
-export type ChannelMemberResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type ChannelMemberResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   banned?: boolean;
   channel_role?: Role;
   created_at?: string;
@@ -343,7 +343,7 @@ export type ChannelMemberResponse<StreamChatGenerics extends ExtendableGenerics 
   shadow_banned?: boolean;
   status?: string;
   updated_at?: string;
-  user?: UserResponse<StreamChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
   user_id?: string;
 };
 
@@ -375,39 +375,39 @@ export type CheckSNSResponse = APIResponse & {
 };
 
 export type CommandResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
 > = Partial<CreatedAtUpdatedAt> & {
   args?: string;
   description?: string;
-  name?: CommandVariants<StreamChatGenerics>;
-  set?: CommandVariants<StreamChatGenerics>;
+  name?: CommandVariants<ErmisChatGenerics>;
+  set?: CommandVariants<ErmisChatGenerics>;
 };
 
 export type ConnectAPIResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = Promise<void | ConnectionOpen<StreamChatGenerics>>;
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = Promise<void | ConnectionOpen<ErmisChatGenerics>>;
 
-export type CreateChannelResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse &
-  Omit<CreateChannelOptions<StreamChatGenerics>, 'client_id' | 'connection_id'> & {
+export type CreateChannelResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse &
+  Omit<CreateChannelOptions<ErmisChatGenerics>, 'client_id' | 'connection_id'> & {
     created_at: string;
     updated_at: string;
     grants?: Record<string, string[]>;
   };
 
-export type CreateCommandResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  command: CreateCommandOptions<StreamChatGenerics> & CreatedAtUpdatedAt;
+export type CreateCommandResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  command: CreateCommandOptions<ErmisChatGenerics> & CreatedAtUpdatedAt;
 };
 
-export type DeleteChannelAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  channel: ChannelResponse<StreamChatGenerics>;
+export type DeleteChannelAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  channel: ChannelResponse<ErmisChatGenerics>;
 };
 
-export type DeleteCommandResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  name?: CommandVariants<StreamChatGenerics>;
+export type DeleteCommandResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  name?: CommandVariants<ErmisChatGenerics>;
 };
 
-export type EventAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  event: Event<StreamChatGenerics>;
+export type EventAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  event: Event<ErmisChatGenerics>;
 };
 
 export type ExportChannelResponse = {
@@ -425,13 +425,13 @@ export type ExportChannelStatusResponse = {
   updated_at?: string;
 };
 
-export type FlagMessageResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+export type FlagMessageResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
   flag: {
     created_at: string;
     created_by_automod: boolean;
     target_message_id: string;
     updated_at: string;
-    user: UserResponse<StreamChatGenerics>;
+    user: UserResponse<ErmisChatGenerics>;
     approved_at?: string;
     channel_cid?: string;
     details?: Object; // Any JSON
@@ -442,13 +442,13 @@ export type FlagMessageResponse<StreamChatGenerics extends ExtendableGenerics = 
   };
 };
 
-export type FlagUserResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+export type FlagUserResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
   flag: {
     created_at: string;
     created_by_automod: boolean;
-    target_user: UserResponse<StreamChatGenerics>;
+    target_user: UserResponse<ErmisChatGenerics>;
     updated_at: string;
-    user: UserResponse<StreamChatGenerics>;
+    user: UserResponse<ErmisChatGenerics>;
     approved_at?: string;
     details?: Object; // Any JSON
     rejected_at?: string;
@@ -457,61 +457,61 @@ export type FlagUserResponse<StreamChatGenerics extends ExtendableGenerics = Def
   };
 };
 
-export type FormatMessageResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = Omit<
+export type FormatMessageResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = Omit<
   MessageResponse<{
-    attachmentType: StreamChatGenerics['attachmentType'];
-    channelType: StreamChatGenerics['channelType'];
-    commandType: StreamChatGenerics['commandType'];
-    eventType: StreamChatGenerics['eventType'];
+    attachmentType: ErmisChatGenerics['attachmentType'];
+    channelType: ErmisChatGenerics['channelType'];
+    commandType: ErmisChatGenerics['commandType'];
+    eventType: ErmisChatGenerics['eventType'];
     messageType: {};
-    pollOptionType: StreamChatGenerics['pollOptionType'];
-    pollType: StreamChatGenerics['pollType'];
-    reactionType: StreamChatGenerics['reactionType'];
-    userType: StreamChatGenerics['userType'];
+    pollOptionType: ErmisChatGenerics['pollOptionType'];
+    pollType: ErmisChatGenerics['pollType'];
+    reactionType: ErmisChatGenerics['reactionType'];
+    userType: ErmisChatGenerics['userType'];
   }>,
   'created_at' | 'pinned_at' | 'updated_at' | 'status'
 > &
-  StreamChatGenerics['messageType'] & {
+  ErmisChatGenerics['messageType'] & {
     created_at: Date;
     pinned_at: Date | null;
     status: string;
     updated_at: Date;
   };
 
-export type GetChannelTypeResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse &
-  Omit<CreateChannelOptions<StreamChatGenerics>, 'client_id' | 'connection_id' | 'commands'> & {
+export type GetChannelTypeResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse &
+  Omit<CreateChannelOptions<ErmisChatGenerics>, 'client_id' | 'connection_id' | 'commands'> & {
     created_at: string;
     updated_at: string;
-    commands?: CommandResponse<StreamChatGenerics>[];
+    commands?: CommandResponse<ErmisChatGenerics>[];
     grants?: Record<string, string[]>;
   };
 
-export type GetCommandResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse &
-  CreateCommandOptions<StreamChatGenerics> &
+export type GetCommandResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse &
+  CreateCommandOptions<ErmisChatGenerics> &
   CreatedAtUpdatedAt;
 
 export type GetMessageAPIResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = SendMessageAPIResponse<StreamChatGenerics>;
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = SendMessageAPIResponse<ErmisChatGenerics>;
 
-export type ThreadResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  channel: ChannelResponse<StreamChatGenerics>;
+export type ThreadResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  channel: ChannelResponse<ErmisChatGenerics>;
   channel_cid: string;
   created_at: string;
   deleted_at: string;
-  latest_replies: MessageResponse<StreamChatGenerics>[];
-  parent_message: MessageResponse<StreamChatGenerics>;
+  latest_replies: MessageResponse<ErmisChatGenerics>[];
+  parent_message: MessageResponse<ErmisChatGenerics>;
   parent_message_id: string;
   read: {
     last_read: string;
     last_read_message_id: string;
     unread_messages: number;
-    user: UserResponse<StreamChatGenerics>;
+    user: UserResponse<ErmisChatGenerics>;
   }[];
   reply_count: number;
   thread_participants: {
     created_at: string;
-    user: UserResponse<StreamChatGenerics>;
+    user: UserResponse<ErmisChatGenerics>;
   }[];
   title: string;
   updated_at: string;
@@ -532,8 +532,8 @@ export type QueryThreadsOptions = {
   watch?: boolean;
 };
 
-export type QueryThreadsAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  threads: ThreadResponse<StreamChatGenerics>[];
+export type QueryThreadsAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  threads: ThreadResponse<ErmisChatGenerics>[];
   next?: string;
 };
 
@@ -544,14 +544,14 @@ export type GetThreadOptions = {
   watch?: boolean;
 };
 
-export type GetThreadAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  thread: ThreadResponse<StreamChatGenerics>;
+export type GetThreadAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  thread: ThreadResponse<ErmisChatGenerics>;
 };
 
 export type GetMultipleMessagesAPIResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
 > = APIResponse & {
-  messages: MessageResponse<StreamChatGenerics>[];
+  messages: MessageResponse<ErmisChatGenerics>[];
 };
 
 export type GetRateLimitsResponse = APIResponse & {
@@ -561,12 +561,12 @@ export type GetRateLimitsResponse = APIResponse & {
   web?: RateLimitsMap;
 };
 
-export type GetReactionsAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  reactions: ReactionResponse<StreamChatGenerics>[];
+export type GetReactionsAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  reactions: ReactionResponse<ErmisChatGenerics>[];
 };
 
-export type GetRepliesAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  messages: MessageResponse<StreamChatGenerics>[];
+export type GetRepliesAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  messages: MessageResponse<ErmisChatGenerics>[];
 };
 
 export type GetUnreadCountAPIResponse = APIResponse & {
@@ -594,11 +594,11 @@ export type GetUnreadCountBatchAPIResponse = APIResponse & {
   counts_by_user: { [userId: string]: GetUnreadCountAPIResponse };
 };
 
-export type ListChannelResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+export type ListChannelResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
   channel_types: Record<
     string,
-    Omit<CreateChannelOptions<StreamChatGenerics>, 'client_id' | 'connection_id' | 'commands'> & {
-      commands: CommandResponse<StreamChatGenerics>[];
+    Omit<CreateChannelOptions<ErmisChatGenerics>, 'client_id' | 'connection_id' | 'commands'> & {
+      commands: CommandResponse<ErmisChatGenerics>[];
       created_at: string;
       updated_at: string;
       grants?: Record<string, string[]>;
@@ -607,33 +607,33 @@ export type ListChannelResponse<StreamChatGenerics extends ExtendableGenerics = 
 };
 
 export type ListChannelTypesAPIResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = ListChannelResponse<StreamChatGenerics>;
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = ListChannelResponse<ErmisChatGenerics>;
 
-export type ListCommandsResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  commands: Array<CreateCommandOptions<StreamChatGenerics> & Partial<CreatedAtUpdatedAt>>;
+export type ListCommandsResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  commands: Array<CreateCommandOptions<ErmisChatGenerics> & Partial<CreatedAtUpdatedAt>>;
 };
 
-export type MuteChannelAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  channel_mute: ChannelMute<StreamChatGenerics>;
-  own_user: OwnUserResponse<StreamChatGenerics>;
-  channel_mutes?: ChannelMute<StreamChatGenerics>[];
-  mute?: MuteResponse<StreamChatGenerics>;
+export type MuteChannelAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  channel_mute: ChannelMute<ErmisChatGenerics>;
+  own_user: OwnUserResponse<ErmisChatGenerics>;
+  channel_mutes?: ChannelMute<ErmisChatGenerics>[];
+  mute?: MuteResponse<ErmisChatGenerics>;
 };
 
 export type MessageResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = MessageResponseBase<StreamChatGenerics> & {
-  quoted_message?: MessageResponseBase<StreamChatGenerics>;
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = MessageResponseBase<ErmisChatGenerics> & {
+  quoted_message?: MessageResponseBase<ErmisChatGenerics>;
 };
 
 export type MessageResponseBase<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = MessageBase<StreamChatGenerics> & {
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = MessageBase<ErmisChatGenerics> & {
   type: MessageLabel;
   args?: string;
   before_message_send_failed?: boolean;
-  channel?: ChannelResponse<StreamChatGenerics>;
+  channel?: ChannelResponse<ErmisChatGenerics>;
   cid?: string;
   command?: string;
   command_info?: { name?: string };
@@ -643,22 +643,22 @@ export type MessageResponseBase<
   i18n?: RequireAtLeastOne<Record<`${TranslationLanguages}_text`, string>> & {
     language: TranslationLanguages;
   };
-  latest_reactions?: ReactionResponse<StreamChatGenerics>[];
-  mentioned_users?: UserResponse<StreamChatGenerics>[];
+  latest_reactions?: ReactionResponse<ErmisChatGenerics>[];
+  mentioned_users?: UserResponse<ErmisChatGenerics>[];
   message_text_updated_at?: string;
   moderation_details?: ModerationDetailsResponse;
-  own_reactions?: ReactionResponse<StreamChatGenerics>[] | null;
+  own_reactions?: ReactionResponse<ErmisChatGenerics>[] | null;
   pin_expires?: string | null;
   pinned_at?: string | null;
-  pinned_by?: UserResponse<StreamChatGenerics> | null;
-  poll?: PollResponse<StreamChatGenerics>;
+  pinned_by?: UserResponse<ErmisChatGenerics> | null;
+  poll?: PollResponse<ErmisChatGenerics>;
   reaction_counts?: { [key: string]: number } | null;
   reaction_groups?: { [key: string]: ReactionGroupResponse } | null;
   reaction_scores?: { [key: string]: number } | null;
   reply_count?: number;
   shadowed?: boolean;
   status?: string;
-  thread_participants?: UserResponse<StreamChatGenerics>[];
+  thread_participants?: UserResponse<ErmisChatGenerics>[];
   updated_at?: string;
 };
 
@@ -681,24 +681,24 @@ export type ModerationHarmResponse = {
   phrase_list_ids: number[];
 };
 
-export type MuteResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  user: UserResponse<StreamChatGenerics>;
+export type MuteResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  user: UserResponse<ErmisChatGenerics>;
   created_at?: string;
   expires?: string;
-  target?: UserResponse<StreamChatGenerics>;
+  target?: UserResponse<ErmisChatGenerics>;
   updated_at?: string;
 };
 
-export type MuteUserResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  mute?: MuteResponse<StreamChatGenerics>;
-  mutes?: Array<Mute<StreamChatGenerics>>;
-  own_user?: OwnUserResponse<StreamChatGenerics>;
+export type MuteUserResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  mute?: MuteResponse<ErmisChatGenerics>;
+  mutes?: Array<Mute<ErmisChatGenerics>>;
+  own_user?: OwnUserResponse<ErmisChatGenerics>;
 };
 
-export type OwnUserBase<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  channel_mutes: ChannelMute<StreamChatGenerics>[];
-  devices: Device<StreamChatGenerics>[];
-  mutes: Mute<StreamChatGenerics>[];
+export type OwnUserBase<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  channel_mutes: ChannelMute<ErmisChatGenerics>[];
+  devices: Device<ErmisChatGenerics>[];
+  mutes: Mute<ErmisChatGenerics>[];
   total_unread_count: number;
   unread_channels: number;
   unread_count: number;
@@ -709,14 +709,14 @@ export type OwnUserBase<StreamChatGenerics extends ExtendableGenerics = DefaultG
 };
 
 export type OwnUserResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = UserResponse<StreamChatGenerics> & OwnUserBase<StreamChatGenerics>;
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = UserResponse<ErmisChatGenerics> & OwnUserBase<ErmisChatGenerics>;
 
 export type PartialUpdateChannelAPIResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
 > = APIResponse & {
-  channel: ChannelResponse<StreamChatGenerics>;
-  members: ChannelMemberResponse<StreamChatGenerics>[];
+  channel: ChannelResponse<ErmisChatGenerics>;
+  members: ChannelMemberResponse<ErmisChatGenerics>[];
 };
 
 export type PermissionAPIResponse = APIResponse & {
@@ -727,29 +727,29 @@ export type PermissionsAPIResponse = APIResponse & {
   permissions?: PermissionAPIObject[];
 };
 
-export type ReactionAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  message: MessageResponse<StreamChatGenerics>;
-  reaction: ReactionResponse<StreamChatGenerics>;
+export type ReactionAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  message: MessageResponse<ErmisChatGenerics>;
+  reaction: ReactionResponse<ErmisChatGenerics>;
 };
 
 export type ReactionResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = Reaction<StreamChatGenerics> & {
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = Reaction<ErmisChatGenerics> & {
   created_at: string;
   message_id: string;
   updated_at: string;
 };
 
-export type ReadResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type ReadResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   last_read: string;
-  user: UserResponse<StreamChatGenerics>;
+  user: UserResponse<ErmisChatGenerics>;
   last_read_message_id?: string;
   unread_messages?: number;
 };
 
-export type SearchAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+export type SearchAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
   results: {
-    message: MessageResponse<StreamChatGenerics>;
+    message: MessageResponse<ErmisChatGenerics>;
   }[];
   next?: string;
   previous?: string;
@@ -766,55 +766,55 @@ export type SearchWarning = {
 // Thumb URL(thumb_url) is added considering video attachments as the backend will return the thumbnail in the response.
 export type SendFileAPIResponse = APIResponse & { file: string; thumb_url?: string };
 
-export type SendMessageAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  message: MessageResponse<StreamChatGenerics>;
+export type SendMessageAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  message: MessageResponse<ErmisChatGenerics>;
   pending_message_metadata?: Record<string, string> | null;
 };
 
-export type SyncResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  events: Event<StreamChatGenerics>[];
+export type SyncResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  events: Event<ErmisChatGenerics>[];
   inaccessible_cids?: string[];
 };
 
 export type TruncateChannelAPIResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
 > = APIResponse & {
-  channel: ChannelResponse<StreamChatGenerics>;
-  message?: MessageResponse<StreamChatGenerics>;
+  channel: ChannelResponse<ErmisChatGenerics>;
+  message?: MessageResponse<ErmisChatGenerics>;
 };
 
-export type UpdateChannelAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  channel: ChannelResponse<StreamChatGenerics>;
-  members: ChannelMemberResponse<StreamChatGenerics>[];
-  message?: MessageResponse<StreamChatGenerics>;
+export type UpdateChannelAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  channel: ChannelResponse<ErmisChatGenerics>;
+  members: ChannelMemberResponse<ErmisChatGenerics>[];
+  message?: MessageResponse<ErmisChatGenerics>;
 };
 
-export type UpdateChannelResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse &
-  Omit<CreateChannelOptions<StreamChatGenerics>, 'client_id' | 'connection_id'> & {
+export type UpdateChannelResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse &
+  Omit<CreateChannelOptions<ErmisChatGenerics>, 'client_id' | 'connection_id'> & {
     created_at: string;
     updated_at: string;
   };
 
-export type UpdateCommandResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  command: UpdateCommandOptions<StreamChatGenerics> &
-    CreatedAtUpdatedAt & {
-      name: CommandVariants<StreamChatGenerics>;
-    };
+export type UpdateCommandResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  command: UpdateCommandOptions<ErmisChatGenerics> &
+  CreatedAtUpdatedAt & {
+    name: CommandVariants<ErmisChatGenerics>;
+  };
 };
 
-export type UpdateMessageAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  message: MessageResponse<StreamChatGenerics>;
+export type UpdateMessageAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  message: MessageResponse<ErmisChatGenerics>;
 };
 
-export type UsersAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  users: Array<UserResponse<StreamChatGenerics>>;
+export type UsersAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  users: Array<UserResponse<ErmisChatGenerics>>;
 };
 
-export type UpdateUsersAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
-  users: { [key: string]: UserResponse<StreamChatGenerics> };
+export type UpdateUsersAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
+  users: { [key: string]: UserResponse<ErmisChatGenerics> };
 };
 
-export type UserResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = User<StreamChatGenerics> & {
+export type UserResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = User<ErmisChatGenerics> & {
   banned?: boolean;
   created_at?: string;
   deactivated_at?: string;
@@ -871,8 +871,8 @@ export type BannedUsersPaginationOptions = Omit<PaginationOptions, 'id_gt' | 'id
   exclude_expired_bans?: boolean;
 };
 
-export type BanUserOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = UnBanUserOptions & {
-  banned_by?: UserResponse<StreamChatGenerics>;
+export type BanUserOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = UnBanUserOptions & {
+  banned_by?: UserResponse<ErmisChatGenerics>;
   banned_by_id?: string;
   ip_ban?: boolean;
   reason?: string;
@@ -890,10 +890,10 @@ export type ChannelOptions = {
   watch?: boolean;
 };
 
-export type ChannelQueryOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type ChannelQueryOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   client_id?: string;
   connection_id?: string;
-  data?: ChannelResponse<StreamChatGenerics>;
+  data?: ChannelResponse<ErmisChatGenerics>;
   hide_for_creator?: boolean;
   members?: PaginationOptions;
   messages?: MessagePaginationOptions;
@@ -908,14 +908,14 @@ export type ChannelStateOptions = {
   skipInitialization?: string[];
 };
 
-export type CreateChannelOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type CreateChannelOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   automod?: ChannelConfigAutomod;
   automod_behavior?: ChannelConfigAutomodBehavior;
   automod_thresholds?: ChannelConfigAutomodThresholds;
   blocklist?: string;
   blocklist_behavior?: ChannelConfigAutomodBehavior;
   client_id?: string;
-  commands?: CommandVariants<StreamChatGenerics>[];
+  commands?: CommandVariants<ErmisChatGenerics>[];
   connect_events?: boolean;
   connection_id?: string;
   custom_events?: boolean;
@@ -939,11 +939,11 @@ export type CreateChannelOptions<StreamChatGenerics extends ExtendableGenerics =
   url_enrichment?: boolean;
 };
 
-export type CreateCommandOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type CreateCommandOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   description: string;
-  name: CommandVariants<StreamChatGenerics>;
+  name: CommandVariants<ErmisChatGenerics>;
   args?: string;
-  set?: CommandVariants<StreamChatGenerics>;
+  set?: CommandVariants<ErmisChatGenerics>;
 };
 
 export type CustomPermissionOptions = {
@@ -962,53 +962,53 @@ export type DeactivateUsersOptions = {
 };
 
 // TODO: rename to UpdateChannelOptions in the next major update and use it in channel._update and/or channel.update
-export type InviteOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type InviteOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   accept_invite?: boolean;
   add_members?: string[];
   add_moderators?: string[];
   client_id?: string;
   connection_id?: string;
-  data?: Omit<ChannelResponse<StreamChatGenerics>, 'id' | 'cid'>;
+  data?: Omit<ChannelResponse<ErmisChatGenerics>, 'id' | 'cid'>;
   demote_moderators?: string[];
   invites?: string[];
-  message?: MessageResponse<StreamChatGenerics>;
+  message?: MessageResponse<ErmisChatGenerics>;
   reject_invite?: boolean;
   remove_members?: string[];
-  user?: UserResponse<StreamChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
   user_id?: string;
 };
 
 /** @deprecated use MarkChannelsReadOptions instead */
 export type MarkAllReadOptions<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = MarkChannelsReadOptions<StreamChatGenerics>;
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = MarkChannelsReadOptions<ErmisChatGenerics>;
 
-export type MarkChannelsReadOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type MarkChannelsReadOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   client_id?: string;
   connection_id?: string;
   read_by_channel?: Record<string, string>;
-  user?: UserResponse<StreamChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
   user_id?: string;
 };
 
-export type MarkReadOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type MarkReadOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   client_id?: string;
   connection_id?: string;
   thread_id?: string;
-  user?: UserResponse<StreamChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
   user_id?: string;
 };
 
-export type MarkUnreadOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type MarkUnreadOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   client_id?: string;
   connection_id?: string;
   message_id?: string;
   thread_id?: string;
-  user?: UserResponse<StreamChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
   user_id?: string;
 };
 
-export type MuteUserOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type MuteUserOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   client_id?: string;
   connection_id?: string;
   id?: string;
@@ -1016,7 +1016,7 @@ export type MuteUserOptions<StreamChatGenerics extends ExtendableGenerics = Defa
   target_user_id?: string;
   timeout?: number;
   type?: string;
-  user?: UserResponse<StreamChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
   user_id?: string;
 };
 
@@ -1073,14 +1073,14 @@ export type ReactivateUsersOptions = {
   restore_messages?: boolean;
 };
 
-export type SearchOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type SearchOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   limit?: number;
   next?: string;
   offset?: number;
-  sort?: SearchMessageSort<StreamChatGenerics>;
+  sort?: SearchMessageSort<ErmisChatGenerics>;
 };
 
-export type StreamChatOptions = AxiosRequestConfig & {
+export type ErmisChatOptions = AxiosRequestConfig & {
   /**
    * Used to disable warnings that are triggered by using connectUser or connectAnonymousUser server-side.
    */
@@ -1088,7 +1088,6 @@ export type StreamChatOptions = AxiosRequestConfig & {
   axiosRequestConfig?: AxiosRequestConfig;
   /**
    * Base url to use for API
-   * such as https://chat-proxy-dublin.stream-io-api.com
    */
   baseURL?: string;
   browser?: boolean;
@@ -1143,18 +1142,18 @@ export type UnBanUserOptions = {
 };
 
 // TODO: rename to UpdateChannelTypeOptions in the next major update
-export type UpdateChannelOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = Omit<
-  CreateChannelOptions<StreamChatGenerics>,
+export type UpdateChannelOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = Omit<
+  CreateChannelOptions<ErmisChatGenerics>,
   'name'
 > & {
   created_at?: string;
   updated_at?: string;
 };
 
-export type UpdateCommandOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type UpdateCommandOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   description: string;
   args?: string;
-  set?: CommandVariants<StreamChatGenerics>;
+  set?: CommandVariants<ErmisChatGenerics>;
 };
 
 export type UserOptions = {
@@ -1173,9 +1172,9 @@ export type ConnectionChangeEvent = {
   online?: boolean;
 };
 
-export type Event<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = StreamChatGenerics['eventType'] & {
+export type Event<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = ErmisChatGenerics['eventType'] & {
   type: EventTypes;
-  channel?: ChannelResponse<StreamChatGenerics>;
+  channel?: ChannelResponse<ErmisChatGenerics>;
   channel_id?: string;
   channel_type?: string;
   cid?: string;
@@ -1190,22 +1189,22 @@ export type Event<StreamChatGenerics extends ExtendableGenerics = DefaultGeneric
   last_read_at?: string;
   last_read_message_id?: string;
   mark_messages_deleted?: boolean;
-  me?: OwnUserResponse<StreamChatGenerics>;
-  member?: ChannelMemberResponse<StreamChatGenerics>;
-  message?: MessageResponse<StreamChatGenerics>;
+  me?: OwnUserResponse<ErmisChatGenerics>;
+  member?: ChannelMemberResponse<ErmisChatGenerics>;
+  message?: MessageResponse<ErmisChatGenerics>;
   mode?: string;
   online?: boolean;
   parent_id?: string;
-  poll?: PollResponse<StreamChatGenerics>;
-  poll_vote?: PollVote<StreamChatGenerics>;
+  poll?: PollResponse<ErmisChatGenerics>;
+  poll_vote?: PollVote<ErmisChatGenerics>;
   queriedChannels?: {
-    channels: ChannelAPIResponse<StreamChatGenerics>[];
+    channels: ChannelAPIResponse<ErmisChatGenerics>[];
     isLatestMessageSet?: boolean;
   };
-  reaction?: ReactionResponse<StreamChatGenerics>;
+  reaction?: ReactionResponse<ErmisChatGenerics>;
   received_at?: string | Date;
   team?: string;
-  thread?: ThreadResponse<StreamChatGenerics>;
+  thread?: ThreadResponse<ErmisChatGenerics>;
   // @deprecated number of all unread messages across all current user's unread channels, equals unread_count
   total_unread_count?: number;
   // number of all current user's channels with at least one unread message including the channel in this event
@@ -1214,19 +1213,19 @@ export type Event<StreamChatGenerics extends ExtendableGenerics = DefaultGeneric
   unread_count?: number;
   // number of unread messages in the channel from this event (notification.mark_unread)
   unread_messages?: number;
-  user?: UserResponse<StreamChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
   user_id?: string;
   watcher_count?: number;
 };
 
 export type UserCustomEvent<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = StreamChatGenerics['eventType'] & {
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = ErmisChatGenerics['eventType'] & {
   type: string;
 };
 
-export type EventHandler<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = (
-  event: Event<StreamChatGenerics>,
+export type EventHandler<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = (
+  event: Event<ErmisChatGenerics>,
 ) => void;
 
 export type EventTypes = 'all' | keyof typeof EVENT_MAP;
@@ -1247,21 +1246,21 @@ export type MessageFlagsFiltersOptions = {
 export type MessageFlagsFilters = QueryFilters<
   {
     channel_cid?:
-      | RequireOnlyOne<Pick<QueryFilter<MessageFlagsFiltersOptions['channel_cid']>, '$eq' | '$in'>>
-      | PrimitiveFilter<MessageFlagsFiltersOptions['channel_cid']>;
+    | RequireOnlyOne<Pick<QueryFilter<MessageFlagsFiltersOptions['channel_cid']>, '$eq' | '$in'>>
+    | PrimitiveFilter<MessageFlagsFiltersOptions['channel_cid']>;
   } & {
     team?:
-      | RequireOnlyOne<Pick<QueryFilter<MessageFlagsFiltersOptions['team']>, '$eq' | '$in'>>
-      | PrimitiveFilter<MessageFlagsFiltersOptions['team']>;
+    | RequireOnlyOne<Pick<QueryFilter<MessageFlagsFiltersOptions['team']>, '$eq' | '$in'>>
+    | PrimitiveFilter<MessageFlagsFiltersOptions['team']>;
   } & {
     user_id?:
-      | RequireOnlyOne<Pick<QueryFilter<MessageFlagsFiltersOptions['user_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<MessageFlagsFiltersOptions['user_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<MessageFlagsFiltersOptions['user_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<MessageFlagsFiltersOptions['user_id']>;
   } & {
-      [Key in keyof Omit<MessageFlagsFiltersOptions, 'channel_cid' | 'user_id' | 'is_reviewed'>]:
-        | RequireOnlyOne<QueryFilter<MessageFlagsFiltersOptions[Key]>>
-        | PrimitiveFilter<MessageFlagsFiltersOptions[Key]>;
-    }
+    [Key in keyof Omit<MessageFlagsFiltersOptions, 'channel_cid' | 'user_id' | 'is_reviewed'>]:
+    | RequireOnlyOne<QueryFilter<MessageFlagsFiltersOptions[Key]>>
+    | PrimitiveFilter<MessageFlagsFiltersOptions[Key]>;
+  }
 >;
 
 export type FlagsFiltersOptions = {
@@ -1276,28 +1275,28 @@ export type FlagsFiltersOptions = {
 export type FlagsFilters = QueryFilters<
   {
     user_id?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagsFiltersOptions['user_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagsFiltersOptions['user_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagsFiltersOptions['user_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagsFiltersOptions['user_id']>;
   } & {
     message_id?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagsFiltersOptions['message_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagsFiltersOptions['message_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagsFiltersOptions['message_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagsFiltersOptions['message_id']>;
   } & {
     message_user_id?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagsFiltersOptions['message_user_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagsFiltersOptions['message_user_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagsFiltersOptions['message_user_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagsFiltersOptions['message_user_id']>;
   } & {
     channel_cid?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagsFiltersOptions['channel_cid']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagsFiltersOptions['channel_cid']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagsFiltersOptions['channel_cid']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagsFiltersOptions['channel_cid']>;
   } & {
     reporter_id?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagsFiltersOptions['reporter_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagsFiltersOptions['reporter_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagsFiltersOptions['reporter_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagsFiltersOptions['reporter_id']>;
   } & {
     team?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagsFiltersOptions['team']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagsFiltersOptions['team']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagsFiltersOptions['team']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagsFiltersOptions['team']>;
   }
 >;
 
@@ -1316,42 +1315,42 @@ export type FlagReportsFiltersOptions = {
 export type FlagReportsFilters = QueryFilters<
   {
     report_id?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['report_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagReportsFiltersOptions['report_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['report_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagReportsFiltersOptions['report_id']>;
   } & {
     review_result?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['review_result']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagReportsFiltersOptions['review_result']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['review_result']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagReportsFiltersOptions['review_result']>;
   } & {
     reviewed_by?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['reviewed_by']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagReportsFiltersOptions['reviewed_by']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['reviewed_by']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagReportsFiltersOptions['reviewed_by']>;
   } & {
     user_id?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['user_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagReportsFiltersOptions['user_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['user_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagReportsFiltersOptions['user_id']>;
   } & {
     message_id?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['message_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagReportsFiltersOptions['message_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['message_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagReportsFiltersOptions['message_id']>;
   } & {
     message_user_id?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['message_user_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagReportsFiltersOptions['message_user_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['message_user_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagReportsFiltersOptions['message_user_id']>;
   } & {
     channel_cid?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['channel_cid']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagReportsFiltersOptions['channel_cid']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['channel_cid']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagReportsFiltersOptions['channel_cid']>;
   } & {
     team?:
-      | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['team']>, '$eq' | '$in'>>
-      | PrimitiveFilter<FlagReportsFiltersOptions['team']>;
+    | RequireOnlyOne<Pick<QueryFilter<FlagReportsFiltersOptions['team']>, '$eq' | '$in'>>
+    | PrimitiveFilter<FlagReportsFiltersOptions['team']>;
   } & {
-      [Key in keyof Omit<
-        FlagReportsFiltersOptions,
-        'report_id' | 'user_id' | 'message_id' | 'review_result' | 'reviewed_by'
-      >]: RequireOnlyOne<QueryFilter<FlagReportsFiltersOptions[Key]>> | PrimitiveFilter<FlagReportsFiltersOptions[Key]>;
-    }
+    [Key in keyof Omit<
+      FlagReportsFiltersOptions,
+      'report_id' | 'user_id' | 'message_id' | 'review_result' | 'reviewed_by'
+    >]: RequireOnlyOne<QueryFilter<FlagReportsFiltersOptions[Key]>> | PrimitiveFilter<FlagReportsFiltersOptions[Key]>;
+  }
 >;
 
 export type BannedUsersFilterOptions = {
@@ -1365,97 +1364,97 @@ export type BannedUsersFilterOptions = {
 export type BannedUsersFilters = QueryFilters<
   {
     channel_cid?:
-      | RequireOnlyOne<Pick<QueryFilter<BannedUsersFilterOptions['channel_cid']>, '$eq' | '$in'>>
-      | PrimitiveFilter<BannedUsersFilterOptions['channel_cid']>;
+    | RequireOnlyOne<Pick<QueryFilter<BannedUsersFilterOptions['channel_cid']>, '$eq' | '$in'>>
+    | PrimitiveFilter<BannedUsersFilterOptions['channel_cid']>;
   } & {
     reason?:
-      | RequireOnlyOne<
-          {
-            $autocomplete?: BannedUsersFilterOptions['reason'];
-          } & QueryFilter<BannedUsersFilterOptions['reason']>
-        >
-      | PrimitiveFilter<BannedUsersFilterOptions['reason']>;
+    | RequireOnlyOne<
+      {
+        $autocomplete?: BannedUsersFilterOptions['reason'];
+      } & QueryFilter<BannedUsersFilterOptions['reason']>
+    >
+    | PrimitiveFilter<BannedUsersFilterOptions['reason']>;
   } & {
-      [Key in keyof Omit<BannedUsersFilterOptions, 'channel_cid' | 'reason'>]:
-        | RequireOnlyOne<QueryFilter<BannedUsersFilterOptions[Key]>>
-        | PrimitiveFilter<BannedUsersFilterOptions[Key]>;
-    }
->;
-
-export type ReactionFilters<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = QueryFilters<
-  {
-    user_id?:
-      | RequireOnlyOne<Pick<QueryFilter<ReactionResponse<StreamChatGenerics>['user_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<ReactionResponse<StreamChatGenerics>['user_id']>;
-  } & {
-    type?:
-      | RequireOnlyOne<Pick<QueryFilter<ReactionResponse<StreamChatGenerics>['type']>, '$eq'>>
-      | PrimitiveFilter<ReactionResponse<StreamChatGenerics>['type']>;
-  } & {
-    created_at?:
-      | RequireOnlyOne<Pick<QueryFilter<PollResponse['created_at']>, '$eq' | '$gt' | '$lt' | '$gte' | '$lte'>>
-      | PrimitiveFilter<PollResponse['created_at']>;
+    [Key in keyof Omit<BannedUsersFilterOptions, 'channel_cid' | 'reason'>]:
+    | RequireOnlyOne<QueryFilter<BannedUsersFilterOptions[Key]>>
+    | PrimitiveFilter<BannedUsersFilterOptions[Key]>;
   }
 >;
 
-export type ChannelFilters<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = QueryFilters<
-  ContainsOperator<StreamChatGenerics['channelType']> & {
+export type ReactionFilters<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = QueryFilters<
+  {
+    user_id?:
+    | RequireOnlyOne<Pick<QueryFilter<ReactionResponse<ErmisChatGenerics>['user_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<ReactionResponse<ErmisChatGenerics>['user_id']>;
+  } & {
+    type?:
+    | RequireOnlyOne<Pick<QueryFilter<ReactionResponse<ErmisChatGenerics>['type']>, '$eq'>>
+    | PrimitiveFilter<ReactionResponse<ErmisChatGenerics>['type']>;
+  } & {
+    created_at?:
+    | RequireOnlyOne<Pick<QueryFilter<PollResponse['created_at']>, '$eq' | '$gt' | '$lt' | '$gte' | '$lte'>>
+    | PrimitiveFilter<PollResponse['created_at']>;
+  }
+>;
+
+export type ChannelFilters<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = QueryFilters<
+  ContainsOperator<ErmisChatGenerics['channelType']> & {
     members?:
-      | RequireOnlyOne<Pick<QueryFilter<string>, '$in' | '$nin'>>
-      | RequireOnlyOne<Pick<QueryFilter<string[]>, '$eq'>>
-      | PrimitiveFilter<string[]>;
+    | RequireOnlyOne<Pick<QueryFilter<string>, '$in' | '$nin'>>
+    | RequireOnlyOne<Pick<QueryFilter<string[]>, '$eq'>>
+    | PrimitiveFilter<string[]>;
   } & {
     name?:
-      | RequireOnlyOne<
-          {
-            $autocomplete?: ChannelResponse<StreamChatGenerics>['name'];
-          } & QueryFilter<ChannelResponse<StreamChatGenerics>['name']>
-        >
-      | PrimitiveFilter<ChannelResponse<StreamChatGenerics>['name']>;
+    | RequireOnlyOne<
+      {
+        $autocomplete?: ChannelResponse<ErmisChatGenerics>['name'];
+      } & QueryFilter<ChannelResponse<ErmisChatGenerics>['name']>
+    >
+    | PrimitiveFilter<ChannelResponse<ErmisChatGenerics>['name']>;
   } & {
-      [Key in keyof Omit<
+    [Key in keyof Omit<
+      ChannelResponse<{
+        attachmentType: ErmisChatGenerics['attachmentType'];
+        channelType: {};
+        commandType: ErmisChatGenerics['commandType'];
+        eventType: ErmisChatGenerics['eventType'];
+        messageType: ErmisChatGenerics['messageType'];
+        pollOptionType: ErmisChatGenerics['pollOptionType'];
+        pollType: ErmisChatGenerics['pollType'];
+        reactionType: ErmisChatGenerics['reactionType'];
+        userType: ErmisChatGenerics['userType'];
+      }>,
+      'name' | 'members'
+    >]:
+    | RequireOnlyOne<
+      QueryFilter<
         ChannelResponse<{
-          attachmentType: StreamChatGenerics['attachmentType'];
+          attachmentType: ErmisChatGenerics['attachmentType'];
           channelType: {};
-          commandType: StreamChatGenerics['commandType'];
-          eventType: StreamChatGenerics['eventType'];
-          messageType: StreamChatGenerics['messageType'];
-          pollOptionType: StreamChatGenerics['pollOptionType'];
-          pollType: StreamChatGenerics['pollType'];
-          reactionType: StreamChatGenerics['reactionType'];
-          userType: StreamChatGenerics['userType'];
-        }>,
-        'name' | 'members'
-      >]:
-        | RequireOnlyOne<
-            QueryFilter<
-              ChannelResponse<{
-                attachmentType: StreamChatGenerics['attachmentType'];
-                channelType: {};
-                commandType: StreamChatGenerics['commandType'];
-                eventType: StreamChatGenerics['eventType'];
-                messageType: StreamChatGenerics['messageType'];
-                pollOptionType: StreamChatGenerics['pollOptionType'];
-                pollType: StreamChatGenerics['pollType'];
-                reactionType: StreamChatGenerics['reactionType'];
-                userType: StreamChatGenerics['userType'];
-              }>[Key]
-            >
-          >
-        | PrimitiveFilter<
-            ChannelResponse<{
-              attachmentType: StreamChatGenerics['attachmentType'];
-              channelType: {};
-              commandType: StreamChatGenerics['commandType'];
-              eventType: StreamChatGenerics['eventType'];
-              messageType: StreamChatGenerics['messageType'];
-              pollOptionType: StreamChatGenerics['pollOptionType'];
-              pollType: StreamChatGenerics['pollType'];
-              reactionType: StreamChatGenerics['reactionType'];
-              userType: StreamChatGenerics['userType'];
-            }>[Key]
-          >;
-    }
+          commandType: ErmisChatGenerics['commandType'];
+          eventType: ErmisChatGenerics['eventType'];
+          messageType: ErmisChatGenerics['messageType'];
+          pollOptionType: ErmisChatGenerics['pollOptionType'];
+          pollType: ErmisChatGenerics['pollType'];
+          reactionType: ErmisChatGenerics['reactionType'];
+          userType: ErmisChatGenerics['userType'];
+        }>[Key]
+      >
+    >
+    | PrimitiveFilter<
+      ChannelResponse<{
+        attachmentType: ErmisChatGenerics['attachmentType'];
+        channelType: {};
+        commandType: ErmisChatGenerics['commandType'];
+        eventType: ErmisChatGenerics['eventType'];
+        messageType: ErmisChatGenerics['messageType'];
+        pollOptionType: ErmisChatGenerics['pollOptionType'];
+        pollType: ErmisChatGenerics['pollType'];
+        reactionType: ErmisChatGenerics['reactionType'];
+        userType: ErmisChatGenerics['userType'];
+      }>[Key]
+    >;
+  }
 >;
 
 export type QueryPollsOptions = Pager;
@@ -1473,46 +1472,46 @@ export type QueryPollsFilters = QueryFilters<
     id?: RequireOnlyOne<Pick<QueryFilter<PollResponse['id']>, '$eq' | '$in'>> | PrimitiveFilter<PollResponse['id']>;
   } & {
     user_id?:
-      | RequireOnlyOne<Pick<QueryFilter<VotesFiltersOptions['user_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<VotesFiltersOptions['user_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<VotesFiltersOptions['user_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<VotesFiltersOptions['user_id']>;
   } & {
     is_closed?:
-      | RequireOnlyOne<Pick<QueryFilter<PollResponse['is_closed']>, '$eq'>>
-      | PrimitiveFilter<PollResponse['is_closed']>;
+    | RequireOnlyOne<Pick<QueryFilter<PollResponse['is_closed']>, '$eq'>>
+    | PrimitiveFilter<PollResponse['is_closed']>;
   } & {
     max_votes_allowed?:
-      | RequireOnlyOne<
-          Pick<QueryFilter<PollResponse['max_votes_allowed']>, '$eq' | '$ne' | '$gt' | '$lt' | '$gte' | '$lte'>
-        >
-      | PrimitiveFilter<PollResponse['max_votes_allowed']>;
+    | RequireOnlyOne<
+      Pick<QueryFilter<PollResponse['max_votes_allowed']>, '$eq' | '$ne' | '$gt' | '$lt' | '$gte' | '$lte'>
+    >
+    | PrimitiveFilter<PollResponse['max_votes_allowed']>;
   } & {
     allow_answers?:
-      | RequireOnlyOne<Pick<QueryFilter<PollResponse['allow_answers']>, '$eq'>>
-      | PrimitiveFilter<PollResponse['allow_answers']>;
+    | RequireOnlyOne<Pick<QueryFilter<PollResponse['allow_answers']>, '$eq'>>
+    | PrimitiveFilter<PollResponse['allow_answers']>;
   } & {
     allow_user_suggested_options?:
-      | RequireOnlyOne<Pick<QueryFilter<PollResponse['allow_user_suggested_options']>, '$eq'>>
-      | PrimitiveFilter<PollResponse['allow_user_suggested_options']>;
+    | RequireOnlyOne<Pick<QueryFilter<PollResponse['allow_user_suggested_options']>, '$eq'>>
+    | PrimitiveFilter<PollResponse['allow_user_suggested_options']>;
   } & {
     voting_visibility?:
-      | RequireOnlyOne<Pick<QueryFilter<PollResponse['voting_visibility']>, '$eq'>>
-      | PrimitiveFilter<PollResponse['voting_visibility']>;
+    | RequireOnlyOne<Pick<QueryFilter<PollResponse['voting_visibility']>, '$eq'>>
+    | PrimitiveFilter<PollResponse['voting_visibility']>;
   } & {
     created_at?:
-      | RequireOnlyOne<Pick<QueryFilter<PollResponse['created_at']>, '$eq' | '$gt' | '$lt' | '$gte' | '$lte'>>
-      | PrimitiveFilter<PollResponse['created_at']>;
+    | RequireOnlyOne<Pick<QueryFilter<PollResponse['created_at']>, '$eq' | '$gt' | '$lt' | '$gte' | '$lte'>>
+    | PrimitiveFilter<PollResponse['created_at']>;
   } & {
     created_by_id?:
-      | RequireOnlyOne<Pick<QueryFilter<PollResponse['created_by_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<PollResponse['created_by_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<PollResponse['created_by_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<PollResponse['created_by_id']>;
   } & {
     updated_at?:
-      | RequireOnlyOne<Pick<QueryFilter<PollResponse['updated_at']>, '$eq' | '$gt' | '$lt' | '$gte' | '$lte'>>
-      | PrimitiveFilter<PollResponse['updated_at']>;
+    | RequireOnlyOne<Pick<QueryFilter<PollResponse['updated_at']>, '$eq' | '$gt' | '$lt' | '$gte' | '$lte'>>
+    | PrimitiveFilter<PollResponse['updated_at']>;
   } & {
     name?:
-      | RequireOnlyOne<Pick<QueryFilter<PollResponse['name']>, '$eq' | '$in'>>
-      | PrimitiveFilter<PollResponse['name']>;
+    | RequireOnlyOne<Pick<QueryFilter<PollResponse['name']>, '$eq' | '$in'>>
+    | PrimitiveFilter<PollResponse['name']>;
   }
 >;
 
@@ -1521,122 +1520,122 @@ export type QueryVotesFilters = QueryFilters<
     id?: RequireOnlyOne<Pick<QueryFilter<PollResponse['id']>, '$eq' | '$in'>> | PrimitiveFilter<PollResponse['id']>;
   } & {
     option_id?:
-      | RequireOnlyOne<Pick<QueryFilter<VotesFiltersOptions['option_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<VotesFiltersOptions['option_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<VotesFiltersOptions['option_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<VotesFiltersOptions['option_id']>;
   } & {
     is_answer?:
-      | RequireOnlyOne<Pick<QueryFilter<VotesFiltersOptions['is_answer']>, '$eq'>>
-      | PrimitiveFilter<VotesFiltersOptions['is_answer']>;
+    | RequireOnlyOne<Pick<QueryFilter<VotesFiltersOptions['is_answer']>, '$eq'>>
+    | PrimitiveFilter<VotesFiltersOptions['is_answer']>;
   } & {
     user_id?:
-      | RequireOnlyOne<Pick<QueryFilter<VotesFiltersOptions['user_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<VotesFiltersOptions['user_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<VotesFiltersOptions['user_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<VotesFiltersOptions['user_id']>;
   } & {
     created_at?:
-      | RequireOnlyOne<Pick<QueryFilter<PollResponse['created_at']>, '$eq' | '$gt' | '$lt' | '$gte' | '$lte'>>
-      | PrimitiveFilter<PollResponse['created_at']>;
+    | RequireOnlyOne<Pick<QueryFilter<PollResponse['created_at']>, '$eq' | '$gt' | '$lt' | '$gte' | '$lte'>>
+    | PrimitiveFilter<PollResponse['created_at']>;
   } & {
     created_by_id?:
-      | RequireOnlyOne<Pick<QueryFilter<PollResponse['created_by_id']>, '$eq' | '$in'>>
-      | PrimitiveFilter<PollResponse['created_by_id']>;
+    | RequireOnlyOne<Pick<QueryFilter<PollResponse['created_by_id']>, '$eq' | '$in'>>
+    | PrimitiveFilter<PollResponse['created_by_id']>;
   } & {
     updated_at?:
-      | RequireOnlyOne<Pick<QueryFilter<PollResponse['updated_at']>, '$eq' | '$gt' | '$lt' | '$gte' | '$lte'>>
-      | PrimitiveFilter<PollResponse['updated_at']>;
+    | RequireOnlyOne<Pick<QueryFilter<PollResponse['updated_at']>, '$eq' | '$gt' | '$lt' | '$gte' | '$lte'>>
+    | PrimitiveFilter<PollResponse['updated_at']>;
   }
 >;
 
 export type ContainsOperator<CustomType = {}> = {
   [Key in keyof CustomType]?: CustomType[Key] extends (infer ContainType)[]
-    ?
-        | RequireOnlyOne<
-            {
-              $contains?: ContainType extends object
-                ? PrimitiveFilter<RequireAtLeastOne<ContainType>>
-                : PrimitiveFilter<ContainType>;
-            } & QueryFilter<PrimitiveFilter<ContainType>[]>
-          >
-        | PrimitiveFilter<PrimitiveFilter<ContainType>[]>
-    : RequireOnlyOne<QueryFilter<CustomType[Key]>> | PrimitiveFilter<CustomType[Key]>;
+  ?
+  | RequireOnlyOne<
+    {
+      $contains?: ContainType extends object
+      ? PrimitiveFilter<RequireAtLeastOne<ContainType>>
+      : PrimitiveFilter<ContainType>;
+    } & QueryFilter<PrimitiveFilter<ContainType>[]>
+  >
+  | PrimitiveFilter<PrimitiveFilter<ContainType>[]>
+  : RequireOnlyOne<QueryFilter<CustomType[Key]>> | PrimitiveFilter<CustomType[Key]>;
 };
 
-export type MessageFilters<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = QueryFilters<
-  ContainsOperator<StreamChatGenerics['messageType']> & {
+export type MessageFilters<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = QueryFilters<
+  ContainsOperator<ErmisChatGenerics['messageType']> & {
     text?:
-      | RequireOnlyOne<
-          {
-            $autocomplete?: MessageResponse<StreamChatGenerics>['text'];
-            $q?: MessageResponse<StreamChatGenerics>['text'];
-          } & QueryFilter<MessageResponse<StreamChatGenerics>['text']>
-        >
-      | PrimitiveFilter<MessageResponse<StreamChatGenerics>['text']>;
+    | RequireOnlyOne<
+      {
+        $autocomplete?: MessageResponse<ErmisChatGenerics>['text'];
+        $q?: MessageResponse<ErmisChatGenerics>['text'];
+      } & QueryFilter<MessageResponse<ErmisChatGenerics>['text']>
+    >
+    | PrimitiveFilter<MessageResponse<ErmisChatGenerics>['text']>;
   } & {
-      [Key in keyof Omit<
+    [Key in keyof Omit<
+      MessageResponse<{
+        attachmentType: ErmisChatGenerics['attachmentType'];
+        channelType: ErmisChatGenerics['channelType'];
+        commandType: ErmisChatGenerics['commandType'];
+        eventType: ErmisChatGenerics['eventType'];
+        messageType: {};
+        pollOptionType: ErmisChatGenerics['pollOptionType'];
+        pollType: ErmisChatGenerics['pollType'];
+        reactionType: ErmisChatGenerics['reactionType'];
+        userType: ErmisChatGenerics['userType'];
+      }>,
+      'text'
+    >]?:
+    | RequireOnlyOne<
+      QueryFilter<
         MessageResponse<{
-          attachmentType: StreamChatGenerics['attachmentType'];
-          channelType: StreamChatGenerics['channelType'];
-          commandType: StreamChatGenerics['commandType'];
-          eventType: StreamChatGenerics['eventType'];
+          attachmentType: ErmisChatGenerics['attachmentType'];
+          channelType: ErmisChatGenerics['channelType'];
+          commandType: ErmisChatGenerics['commandType'];
+          eventType: ErmisChatGenerics['eventType'];
           messageType: {};
-          pollOptionType: StreamChatGenerics['pollOptionType'];
-          pollType: StreamChatGenerics['pollType'];
-          reactionType: StreamChatGenerics['reactionType'];
-          userType: StreamChatGenerics['userType'];
-        }>,
-        'text'
-      >]?:
-        | RequireOnlyOne<
-            QueryFilter<
-              MessageResponse<{
-                attachmentType: StreamChatGenerics['attachmentType'];
-                channelType: StreamChatGenerics['channelType'];
-                commandType: StreamChatGenerics['commandType'];
-                eventType: StreamChatGenerics['eventType'];
-                messageType: {};
-                pollOptionType: StreamChatGenerics['pollOptionType'];
-                pollType: StreamChatGenerics['pollType'];
-                reactionType: StreamChatGenerics['reactionType'];
-                userType: StreamChatGenerics['userType'];
-              }>[Key]
-            >
-          >
-        | PrimitiveFilter<
-            MessageResponse<{
-              attachmentType: StreamChatGenerics['attachmentType'];
-              channelType: StreamChatGenerics['channelType'];
-              commandType: StreamChatGenerics['commandType'];
-              eventType: StreamChatGenerics['eventType'];
-              messageType: {};
-              pollOptionType: StreamChatGenerics['pollOptionType'];
-              pollType: StreamChatGenerics['pollType'];
-              reactionType: StreamChatGenerics['reactionType'];
-              userType: StreamChatGenerics['userType'];
-            }>[Key]
-          >;
-    }
+          pollOptionType: ErmisChatGenerics['pollOptionType'];
+          pollType: ErmisChatGenerics['pollType'];
+          reactionType: ErmisChatGenerics['reactionType'];
+          userType: ErmisChatGenerics['userType'];
+        }>[Key]
+      >
+    >
+    | PrimitiveFilter<
+      MessageResponse<{
+        attachmentType: ErmisChatGenerics['attachmentType'];
+        channelType: ErmisChatGenerics['channelType'];
+        commandType: ErmisChatGenerics['commandType'];
+        eventType: ErmisChatGenerics['eventType'];
+        messageType: {};
+        pollOptionType: ErmisChatGenerics['pollOptionType'];
+        pollType: ErmisChatGenerics['pollType'];
+        reactionType: ErmisChatGenerics['reactionType'];
+        userType: ErmisChatGenerics['userType'];
+      }>[Key]
+    >;
+  }
 >;
 
 export type PrimitiveFilter<ObjectType> = ObjectType | null;
 
 export type QueryFilter<ObjectType = string> = NonNullable<ObjectType> extends string | number | boolean
   ? {
-      $eq?: PrimitiveFilter<ObjectType>;
-      $exists?: boolean;
-      $gt?: PrimitiveFilter<ObjectType>;
-      $gte?: PrimitiveFilter<ObjectType>;
-      $in?: PrimitiveFilter<ObjectType>[];
-      $lt?: PrimitiveFilter<ObjectType>;
-      $lte?: PrimitiveFilter<ObjectType>;
-      $ne?: PrimitiveFilter<ObjectType>;
-      $nin?: PrimitiveFilter<ObjectType>[];
-    }
+    $eq?: PrimitiveFilter<ObjectType>;
+    $exists?: boolean;
+    $gt?: PrimitiveFilter<ObjectType>;
+    $gte?: PrimitiveFilter<ObjectType>;
+    $in?: PrimitiveFilter<ObjectType>[];
+    $lt?: PrimitiveFilter<ObjectType>;
+    $lte?: PrimitiveFilter<ObjectType>;
+    $ne?: PrimitiveFilter<ObjectType>;
+    $nin?: PrimitiveFilter<ObjectType>[];
+  }
   : {
-      $eq?: PrimitiveFilter<ObjectType>;
-      $exists?: boolean;
-      $in?: PrimitiveFilter<ObjectType>[];
-      $ne?: PrimitiveFilter<ObjectType>;
-      $nin?: PrimitiveFilter<ObjectType>[];
-    };
+    $eq?: PrimitiveFilter<ObjectType>;
+    $exists?: boolean;
+    $in?: PrimitiveFilter<ObjectType>[];
+    $ne?: PrimitiveFilter<ObjectType>;
+    $nin?: PrimitiveFilter<ObjectType>[];
+  };
 
 export type QueryFilters<Operators = {}> = {
   [Key in keyof Operators]?: Operators[Key];
@@ -1649,80 +1648,80 @@ export type QueryLogicalOperators<Operators> = {
   $or?: ArrayTwoOrMore<QueryFilters<Operators>>;
 };
 
-export type UserFilters<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = QueryFilters<
-  ContainsOperator<StreamChatGenerics['userType']> & {
+export type UserFilters<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = QueryFilters<
+  ContainsOperator<ErmisChatGenerics['userType']> & {
     id?:
-      | RequireOnlyOne<
-          { $autocomplete?: UserResponse<StreamChatGenerics>['id'] } & QueryFilter<
-            UserResponse<StreamChatGenerics>['id']
-          >
-        >
-      | PrimitiveFilter<UserResponse<StreamChatGenerics>['id']>;
+    | RequireOnlyOne<
+      { $autocomplete?: UserResponse<ErmisChatGenerics>['id'] } & QueryFilter<
+        UserResponse<ErmisChatGenerics>['id']
+      >
+    >
+    | PrimitiveFilter<UserResponse<ErmisChatGenerics>['id']>;
     name?:
-      | RequireOnlyOne<
-          { $autocomplete?: UserResponse<StreamChatGenerics>['name'] } & QueryFilter<
-            UserResponse<StreamChatGenerics>['name']
-          >
-        >
-      | PrimitiveFilter<UserResponse<StreamChatGenerics>['name']>;
+    | RequireOnlyOne<
+      { $autocomplete?: UserResponse<ErmisChatGenerics>['name'] } & QueryFilter<
+        UserResponse<ErmisChatGenerics>['name']
+      >
+    >
+    | PrimitiveFilter<UserResponse<ErmisChatGenerics>['name']>;
     teams?:
-      | RequireOnlyOne<{
-          $contains?: PrimitiveFilter<string>;
-          $eq?: PrimitiveFilter<UserResponse<StreamChatGenerics>['teams']>;
-          $in?: PrimitiveFilter<UserResponse<StreamChatGenerics>['teams']>;
-        }>
-      | PrimitiveFilter<UserResponse<StreamChatGenerics>['teams']>;
+    | RequireOnlyOne<{
+      $contains?: PrimitiveFilter<string>;
+      $eq?: PrimitiveFilter<UserResponse<ErmisChatGenerics>['teams']>;
+      $in?: PrimitiveFilter<UserResponse<ErmisChatGenerics>['teams']>;
+    }>
+    | PrimitiveFilter<UserResponse<ErmisChatGenerics>['teams']>;
     username?:
-      | RequireOnlyOne<
-          { $autocomplete?: UserResponse<StreamChatGenerics>['username'] } & QueryFilter<
-            UserResponse<StreamChatGenerics>['username']
-          >
-        >
-      | PrimitiveFilter<UserResponse<StreamChatGenerics>['username']>;
+    | RequireOnlyOne<
+      { $autocomplete?: UserResponse<ErmisChatGenerics>['username'] } & QueryFilter<
+        UserResponse<ErmisChatGenerics>['username']
+      >
+    >
+    | PrimitiveFilter<UserResponse<ErmisChatGenerics>['username']>;
   } & {
-      [Key in keyof Omit<
+    [Key in keyof Omit<
+      UserResponse<{
+        attachmentType: ErmisChatGenerics['attachmentType'];
+        channelType: ErmisChatGenerics['channelType'];
+        commandType: ErmisChatGenerics['commandType'];
+        eventType: ErmisChatGenerics['eventType'];
+        messageType: ErmisChatGenerics['messageType'];
+        pollOptionType: ErmisChatGenerics['pollOptionType'];
+        pollType: ErmisChatGenerics['pollType'];
+        reactionType: ErmisChatGenerics['reactionType'];
+        userType: {};
+      }>,
+      'id' | 'name' | 'teams' | 'username'
+    >]?:
+    | RequireOnlyOne<
+      QueryFilter<
         UserResponse<{
-          attachmentType: StreamChatGenerics['attachmentType'];
-          channelType: StreamChatGenerics['channelType'];
-          commandType: StreamChatGenerics['commandType'];
-          eventType: StreamChatGenerics['eventType'];
-          messageType: StreamChatGenerics['messageType'];
-          pollOptionType: StreamChatGenerics['pollOptionType'];
-          pollType: StreamChatGenerics['pollType'];
-          reactionType: StreamChatGenerics['reactionType'];
+          attachmentType: ErmisChatGenerics['attachmentType'];
+          channelType: ErmisChatGenerics['channelType'];
+          commandType: ErmisChatGenerics['commandType'];
+          eventType: ErmisChatGenerics['eventType'];
+          messageType: ErmisChatGenerics['messageType'];
+          pollOptionType: ErmisChatGenerics['pollOptionType'];
+          pollType: ErmisChatGenerics['pollType'];
+          reactionType: ErmisChatGenerics['reactionType'];
           userType: {};
-        }>,
-        'id' | 'name' | 'teams' | 'username'
-      >]?:
-        | RequireOnlyOne<
-            QueryFilter<
-              UserResponse<{
-                attachmentType: StreamChatGenerics['attachmentType'];
-                channelType: StreamChatGenerics['channelType'];
-                commandType: StreamChatGenerics['commandType'];
-                eventType: StreamChatGenerics['eventType'];
-                messageType: StreamChatGenerics['messageType'];
-                pollOptionType: StreamChatGenerics['pollOptionType'];
-                pollType: StreamChatGenerics['pollType'];
-                reactionType: StreamChatGenerics['reactionType'];
-                userType: {};
-              }>[Key]
-            >
-          >
-        | PrimitiveFilter<
-            UserResponse<{
-              attachmentType: StreamChatGenerics['attachmentType'];
-              channelType: StreamChatGenerics['channelType'];
-              commandType: StreamChatGenerics['commandType'];
-              eventType: StreamChatGenerics['eventType'];
-              messageType: StreamChatGenerics['messageType'];
-              pollOptionType: StreamChatGenerics['pollOptionType'];
-              pollType: StreamChatGenerics['pollType'];
-              reactionType: StreamChatGenerics['reactionType'];
-              userType: {};
-            }>[Key]
-          >;
-    }
+        }>[Key]
+      >
+    >
+    | PrimitiveFilter<
+      UserResponse<{
+        attachmentType: ErmisChatGenerics['attachmentType'];
+        channelType: ErmisChatGenerics['channelType'];
+        commandType: ErmisChatGenerics['commandType'];
+        eventType: ErmisChatGenerics['eventType'];
+        messageType: ErmisChatGenerics['messageType'];
+        pollOptionType: ErmisChatGenerics['pollOptionType'];
+        pollType: ErmisChatGenerics['pollType'];
+        reactionType: ErmisChatGenerics['reactionType'];
+        userType: {};
+      }>[Key]
+    >;
+  }
 >;
 
 /**
@@ -1733,22 +1732,22 @@ export type BannedUsersSort = BannedUsersSortBase | Array<BannedUsersSortBase>;
 
 export type BannedUsersSortBase = { created_at?: AscDesc };
 
-export type ReactionSort<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> =
-  | ReactionSortBase<StreamChatGenerics>
-  | Array<ReactionSortBase<StreamChatGenerics>>;
+export type ReactionSort<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> =
+  | ReactionSortBase<ErmisChatGenerics>
+  | Array<ReactionSortBase<ErmisChatGenerics>>;
 
-export type ReactionSortBase<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = Sort<
-  StreamChatGenerics['reactionType']
+export type ReactionSortBase<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = Sort<
+  ErmisChatGenerics['reactionType']
 > & {
   created_at?: AscDesc;
 };
 
-export type ChannelSort<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> =
-  | ChannelSortBase<StreamChatGenerics>
-  | Array<ChannelSortBase<StreamChatGenerics>>;
+export type ChannelSort<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> =
+  | ChannelSortBase<ErmisChatGenerics>
+  | Array<ChannelSortBase<ErmisChatGenerics>>;
 
-export type ChannelSortBase<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = Sort<
-  StreamChatGenerics['channelType']
+export type ChannelSortBase<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = Sort<
+  ErmisChatGenerics['channelType']
 > & {
   created_at?: AscDesc;
   has_unread?: AscDesc;
@@ -1766,16 +1765,16 @@ export type Sort<T> = {
   [P in keyof T]?: AscDesc;
 };
 
-export type UserSort<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> =
-  | Sort<UserResponse<StreamChatGenerics>>
-  | Array<Sort<UserResponse<StreamChatGenerics>>>;
+export type UserSort<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> =
+  | Sort<UserResponse<ErmisChatGenerics>>
+  | Array<Sort<UserResponse<ErmisChatGenerics>>>;
 
-export type MemberSort<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> =
-  | Sort<Pick<UserResponse<StreamChatGenerics>, 'id' | 'created_at' | 'name'>>
-  | Array<Sort<Pick<UserResponse<StreamChatGenerics>, 'id' | 'created_at' | 'name'>>>;
+export type MemberSort<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> =
+  | Sort<Pick<UserResponse<ErmisChatGenerics>, 'id' | 'created_at' | 'name'>>
+  | Array<Sort<Pick<UserResponse<ErmisChatGenerics>, 'id' | 'created_at' | 'name'>>>;
 
-export type SearchMessageSortBase<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = Sort<
-  StreamChatGenerics['messageType']
+export type SearchMessageSortBase<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = Sort<
+  ErmisChatGenerics['messageType']
 > & {
   attachments?: AscDesc;
   'attachments.type'?: AscDesc;
@@ -1792,15 +1791,15 @@ export type SearchMessageSortBase<StreamChatGenerics extends ExtendableGenerics 
   'user.id'?: AscDesc;
 };
 
-export type SearchMessageSort<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> =
-  | SearchMessageSortBase<StreamChatGenerics>
-  | Array<SearchMessageSortBase<StreamChatGenerics>>;
+export type SearchMessageSort<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> =
+  | SearchMessageSortBase<ErmisChatGenerics>
+  | Array<SearchMessageSortBase<ErmisChatGenerics>>;
 
-export type QuerySort<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> =
+export type QuerySort<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> =
   | BannedUsersSort
-  | ChannelSort<StreamChatGenerics>
-  | SearchMessageSort<StreamChatGenerics>
-  | UserSort<StreamChatGenerics>;
+  | ChannelSort<ErmisChatGenerics>
+  | SearchMessageSort<ErmisChatGenerics>
+  | UserSort<ErmisChatGenerics>;
 
 export type PollSort = PollSortBase | Array<PollSortBase>;
 
@@ -1936,8 +1935,8 @@ export type AppSettings = {
 };
 
 export type Attachment<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = StreamChatGenerics['attachmentType'] & {
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = ErmisChatGenerics['attachmentType'] & {
   actions?: Action[];
   asset_url?: string;
   author_icon?: string;
@@ -1983,9 +1982,9 @@ export type BlockList = {
   words: string[];
 };
 
-export type ChannelConfig<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = ChannelConfigFields &
+export type ChannelConfig<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = ChannelConfigFields &
   CreatedAtUpdatedAt & {
-    commands?: CommandVariants<StreamChatGenerics>[];
+    commands?: CommandVariants<ErmisChatGenerics>[];
   };
 
 export type ChannelConfigAutomod = '' | 'AI' | 'disabled' | 'simple';
@@ -2024,20 +2023,20 @@ export type ChannelConfigFields = {
 };
 
 export type ChannelConfigWithInfo<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
 > = ChannelConfigFields &
   CreatedAtUpdatedAt & {
-    commands?: CommandResponse<StreamChatGenerics>[];
+    commands?: CommandResponse<ErmisChatGenerics>[];
   };
 
 export type ChannelData<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = StreamChatGenerics['channelType'] & {
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = ErmisChatGenerics['channelType'] & {
   members?: string[];
   name?: string;
 };
 
-export type ChannelMembership<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type ChannelMembership<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   banned?: boolean;
   channel_role?: Role;
   created_at?: string;
@@ -2047,12 +2046,12 @@ export type ChannelMembership<StreamChatGenerics extends ExtendableGenerics = De
   shadow_banned?: boolean;
   status?: string;
   updated_at?: string;
-  user?: UserResponse<StreamChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
 };
 
-export type ChannelMute<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  user: UserResponse<StreamChatGenerics>;
-  channel?: ChannelResponse<StreamChatGenerics>;
+export type ChannelMute<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  user: UserResponse<ErmisChatGenerics>;
+  channel?: ChannelResponse<ErmisChatGenerics>;
   created_at?: string;
   expires?: string;
   updated_at?: string;
@@ -2066,14 +2065,14 @@ export type ChannelRole = {
   same_team?: boolean;
 };
 
-export type CheckPushInput<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type CheckPushInput<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   apn_template?: string;
   client_id?: string;
   connection_id?: string;
   firebase_data_template?: string;
   firebase_template?: string;
   message_id?: string;
-  user?: UserResponse<StreamChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
   user_id?: string;
 };
 
@@ -2129,7 +2128,7 @@ export type PushProviderXiaomi = {
   xiaomi_secret?: string;
 };
 
-export type CommandVariants<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> =
+export type CommandVariants<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> =
   | 'all'
   | 'ban'
   | 'fun_set'
@@ -2138,18 +2137,18 @@ export type CommandVariants<StreamChatGenerics extends ExtendableGenerics = Defa
   | 'mute'
   | 'unban'
   | 'unmute'
-  | StreamChatGenerics['commandType'];
+  | ErmisChatGenerics['commandType'];
 
-export type Configs<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = Record<
+export type Configs<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = Record<
   string,
-  ChannelConfigWithInfo<StreamChatGenerics> | undefined
+  ChannelConfigWithInfo<ErmisChatGenerics> | undefined
 >;
 
-export type ConnectionOpen<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type ConnectionOpen<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   connection_id: string;
   cid?: string;
   created_at?: string;
-  me?: OwnUserResponse<StreamChatGenerics>;
+  me?: OwnUserResponse<ErmisChatGenerics>;
   type?: string;
 };
 
@@ -2158,9 +2157,9 @@ export type CreatedAtUpdatedAt = {
   updated_at: string;
 };
 
-export type Device<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = DeviceFields & {
+export type Device<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = DeviceFields & {
   provider?: string;
-  user?: UserResponse<StreamChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
   user_id?: string;
 };
 
@@ -2380,17 +2379,17 @@ export type LogLevel = 'info' | 'error' | 'warn';
 
 export type Logger = (logLevel: LogLevel, message: string, extraData?: Record<string, unknown>) => void;
 
-export type Message<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = Partial<
-  MessageBase<StreamChatGenerics>
+export type Message<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = Partial<
+  MessageBase<ErmisChatGenerics>
 > & {
   mentioned_users?: string[];
 };
 
 export type MessageBase<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = StreamChatGenerics['messageType'] & {
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = ErmisChatGenerics['messageType'] & {
   id: string;
-  attachments?: Attachment<StreamChatGenerics>[];
+  attachments?: Attachment<ErmisChatGenerics>[];
   html?: string;
   mml?: string;
   parent_id?: string;
@@ -2402,7 +2401,7 @@ export type MessageBase<
   show_in_channel?: boolean;
   silent?: boolean;
   text?: string;
-  user?: UserResponse<StreamChatGenerics> | null;
+  user?: UserResponse<ErmisChatGenerics> | null;
   user_id?: string;
 };
 
@@ -2426,36 +2425,36 @@ export type GetMessageOptions = {
   show_deleted_message?: boolean;
 };
 
-export type Mute<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type Mute<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   created_at: string;
-  target: UserResponse<StreamChatGenerics>;
+  target: UserResponse<ErmisChatGenerics>;
   updated_at: string;
-  user: UserResponse<StreamChatGenerics>;
+  user: UserResponse<ErmisChatGenerics>;
 };
 
-export type PartialUpdateChannel<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  set?: Partial<ChannelResponse<StreamChatGenerics>>;
-  unset?: Array<keyof ChannelResponse<StreamChatGenerics>>;
+export type PartialUpdateChannel<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  set?: Partial<ChannelResponse<ErmisChatGenerics>>;
+  unset?: Array<keyof ChannelResponse<ErmisChatGenerics>>;
 };
 
-export type PartialUserUpdate<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type PartialUserUpdate<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   id: string;
-  set?: Partial<UserResponse<StreamChatGenerics>>;
-  unset?: Array<keyof UserResponse<StreamChatGenerics>>;
+  set?: Partial<UserResponse<ErmisChatGenerics>>;
+  unset?: Array<keyof UserResponse<ErmisChatGenerics>>;
 };
 
-export type MessageUpdatableFields<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = Omit<
-  MessageResponse<StreamChatGenerics>,
+export type MessageUpdatableFields<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = Omit<
+  MessageResponse<ErmisChatGenerics>,
   'cid' | 'created_at' | 'updated_at' | 'deleted_at' | 'user' | 'user_id'
 >;
 
-export type PartialMessageUpdate<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  set?: Partial<MessageUpdatableFields<StreamChatGenerics>>;
-  unset?: Array<keyof MessageUpdatableFields<StreamChatGenerics>>;
+export type PartialMessageUpdate<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  set?: Partial<MessageUpdatableFields<ErmisChatGenerics>>;
+  unset?: Array<keyof MessageUpdatableFields<ErmisChatGenerics>>;
 };
 
-export type PendingMessageResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  message: MessageResponse<StreamChatGenerics>;
+export type PendingMessageResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  message: MessageResponse<ErmisChatGenerics>;
   pending_message_metadata?: Record<string, string>;
 };
 
@@ -2501,12 +2500,12 @@ export type RateLimitsInfo = {
 export type RateLimitsMap = Record<EndpointName, RateLimitsInfo>;
 
 export type Reaction<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = StreamChatGenerics['reactionType'] & {
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = ErmisChatGenerics['reactionType'] & {
   type: string;
   message_id?: string;
   score?: number;
-  user?: UserResponse<StreamChatGenerics> | null;
+  user?: UserResponse<ErmisChatGenerics> | null;
   user_id?: string;
 };
 
@@ -2530,18 +2529,18 @@ export type Resource =
   | 'UpdateUser'
   | 'UploadAttachment';
 
-export type SearchPayload<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = Omit<
-  SearchOptions<StreamChatGenerics>,
+export type SearchPayload<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = Omit<
+  SearchOptions<ErmisChatGenerics>,
   'sort'
 > & {
   client_id?: string;
   connection_id?: string;
-  filter_conditions?: ChannelFilters<StreamChatGenerics>;
-  message_filter_conditions?: MessageFilters<StreamChatGenerics>;
+  filter_conditions?: ChannelFilters<ErmisChatGenerics>;
+  message_filter_conditions?: MessageFilters<ErmisChatGenerics>;
   query?: string;
   sort?: Array<{
     direction: AscDesc;
-    field: keyof SearchMessageSortBase<StreamChatGenerics>;
+    field: keyof SearchMessageSortBase<ErmisChatGenerics>;
   }>;
 };
 
@@ -2646,12 +2645,12 @@ export type ReservedMessageFields =
   | 'user'
   | '__html';
 
-export type UpdatedMessage<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = Omit<
-  MessageResponse<StreamChatGenerics>,
+export type UpdatedMessage<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = Omit<
+  MessageResponse<ErmisChatGenerics>,
   'mentioned_users'
 > & { mentioned_users?: string[] };
 
-export type User<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = StreamChatGenerics['userType'] & {
+export type User<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = ErmisChatGenerics['userType'] & {
   id: string;
   anon?: boolean;
   name?: string;
@@ -2822,12 +2821,12 @@ export type TaskStatus = {
   result?: UR;
 };
 
-export type TruncateOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type TruncateOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   hard_delete?: boolean;
-  message?: Message<StreamChatGenerics>;
+  message?: Message<ErmisChatGenerics>;
   skip_push?: boolean;
   truncated_at?: Date;
-  user?: UserResponse<StreamChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
   user_id?: string;
 };
 
@@ -2884,11 +2883,11 @@ export type PushProviderListResponse = {
   push_providers: PushProvider[];
 };
 
-export type CreateCallOptions<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type CreateCallOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   id: string;
   type: string;
   options?: UR;
-  user?: UserResponse<StreamChatGenerics> | null;
+  user?: UserResponse<ErmisChatGenerics> | null;
   user_id?: string;
 };
 
@@ -2940,58 +2939,58 @@ export class ErrorFromResponse<T> extends Error {
   status?: number;
 }
 
-export type QueryPollsResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  polls: PollResponse<StreamChatGenerics>[];
+export type QueryPollsResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  polls: PollResponse<ErmisChatGenerics>[];
   next?: string;
 };
 
-export type CreatePollAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  poll: PollResponse<StreamChatGenerics>;
+export type CreatePollAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  poll: PollResponse<ErmisChatGenerics>;
 };
 
-export type GetPollAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  poll: PollResponse<StreamChatGenerics>;
+export type GetPollAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  poll: PollResponse<ErmisChatGenerics>;
 };
 
-export type UpdatePollAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  poll: PollResponse<StreamChatGenerics>;
+export type UpdatePollAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  poll: PollResponse<ErmisChatGenerics>;
 };
 
 export type PollResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = StreamChatGenerics['pollType'] & {
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = ErmisChatGenerics['pollType'] & {
   answers_count: number;
   created_at: string;
-  created_by: UserResponse<StreamChatGenerics> | null;
+  created_by: UserResponse<ErmisChatGenerics> | null;
   created_by_id: string;
   enforce_unique_vote: boolean;
   id: string;
-  latest_answers: PollVote<StreamChatGenerics>[];
-  latest_votes_by_option: Record<string, PollVote<StreamChatGenerics>[]>;
+  latest_answers: PollVote<ErmisChatGenerics>[];
+  latest_votes_by_option: Record<string, PollVote<ErmisChatGenerics>[]>;
   max_votes_allowed: number;
   name: string;
-  options: PollOption<StreamChatGenerics>[];
+  options: PollOption<ErmisChatGenerics>[];
   updated_at: string;
   vote_count: number;
   vote_counts_by_option: Record<string, number>;
   allow_answers?: boolean;
   allow_user_suggested_options?: boolean;
-  channel?: ChannelAPIResponse<StreamChatGenerics> | null;
+  channel?: ChannelAPIResponse<ErmisChatGenerics> | null;
   cid?: string;
   description?: string;
   is_closed?: boolean;
-  own_votes?: PollVote<StreamChatGenerics>[];
+  own_votes?: PollVote<ErmisChatGenerics>[];
   voting_visibility?: VotingVisibility;
 };
 
-export type PollOption<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type PollOption<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   created_at: string;
   id: string;
   poll_id: string;
   text: string;
   updated_at: string;
   vote_count: number;
-  votes?: PollVote<StreamChatGenerics>[];
+  votes?: PollVote<ErmisChatGenerics>[];
 };
 
 export enum VotingVisibility {
@@ -3000,8 +2999,8 @@ export enum VotingVisibility {
 }
 
 export type PollData<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = StreamChatGenerics['pollType'] & {
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = ErmisChatGenerics['pollType'] & {
   name: string;
   allow_answers?: boolean;
   allow_user_suggested_options?: boolean;
@@ -3010,28 +3009,28 @@ export type PollData<
   id?: string;
   is_closed?: boolean;
   max_votes_allowed?: number;
-  options?: PollOptionData<StreamChatGenerics>[];
+  options?: PollOptionData<ErmisChatGenerics>[];
   user_id?: string;
   voting_visibility?: VotingVisibility;
 };
 
-export type PartialPollUpdate<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type PartialPollUpdate<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   // id: string;
-  set?: Partial<PollResponse<StreamChatGenerics>>;
-  unset?: Array<keyof PollResponse<StreamChatGenerics>>;
+  set?: Partial<PollResponse<ErmisChatGenerics>>;
+  unset?: Array<keyof PollResponse<ErmisChatGenerics>>;
 };
 
 export type PollOptionData<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = StreamChatGenerics['pollType'] & {
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = ErmisChatGenerics['pollType'] & {
   text: string;
   id?: string;
   position?: number;
 };
 
-export type PartialPollOptionUpdate<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  set?: Partial<PollOptionResponse<StreamChatGenerics>>;
-  unset?: Array<keyof PollOptionResponse<StreamChatGenerics>>;
+export type PartialPollOptionUpdate<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  set?: Partial<PollOptionResponse<ErmisChatGenerics>>;
+  unset?: Array<keyof PollOptionResponse<ErmisChatGenerics>>;
 };
 
 export type PollVoteData = {
@@ -3045,20 +3044,20 @@ export type PollPaginationOptions = {
   next?: string;
 };
 
-export type CreatePollOptionAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  poll_option: PollOptionResponse<StreamChatGenerics>;
+export type CreatePollOptionAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  poll_option: PollOptionResponse<ErmisChatGenerics>;
 };
 
 export type GetPollOptionAPIResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = CreatePollOptionAPIResponse<StreamChatGenerics>;
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = CreatePollOptionAPIResponse<ErmisChatGenerics>;
 export type UpdatePollOptionAPIResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = CreatePollOptionAPIResponse<StreamChatGenerics>;
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = CreatePollOptionAPIResponse<ErmisChatGenerics>;
 
 export type PollOptionResponse<
-  StreamChatGenerics extends ExtendableGenerics = DefaultGenerics
-> = StreamChatGenerics['pollType'] & {
+  ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics
+> = ErmisChatGenerics['pollType'] & {
   created_at: string;
   id: string;
   poll_id: string;
@@ -3066,10 +3065,10 @@ export type PollOptionResponse<
   text: string;
   updated_at: string;
   vote_count: number;
-  votes?: PollVote<StreamChatGenerics>[];
+  votes?: PollVote<ErmisChatGenerics>[];
 };
 
-export type PollVote<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export type PollVote<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   created_at: string;
   id: string;
   is_answer: boolean;
@@ -3077,14 +3076,14 @@ export type PollVote<StreamChatGenerics extends ExtendableGenerics = DefaultGene
   user_id: string;
   answer_text?: string;
   option_id?: string;
-  user?: UserResponse<StreamChatGenerics>;
+  user?: UserResponse<ErmisChatGenerics>;
 };
 
-export type PollVotesAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  votes: PollVote<StreamChatGenerics>[];
+export type PollVotesAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  votes: PollVote<ErmisChatGenerics>[];
   next?: string;
 };
 
-export type CastVoteAPIResponse<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  vote: PollVote<StreamChatGenerics>;
+export type CastVoteAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  vote: PollVote<ErmisChatGenerics>;
 };

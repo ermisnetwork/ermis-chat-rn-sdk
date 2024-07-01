@@ -3,9 +3,9 @@ import { UserResponse, ExtendableGenerics, DefaultGenerics } from './types';
 /**
  * ClientState - A container class for the client state.
  */
-export class ClientState<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> {
+export class ClientState<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> {
   users: {
-    [key: string]: UserResponse<StreamChatGenerics>;
+    [key: string]: UserResponse<ErmisChatGenerics>;
   };
   userChannelReferences: { [key: string]: { [key: string]: boolean } };
   constructor() {
@@ -16,19 +16,19 @@ export class ClientState<StreamChatGenerics extends ExtendableGenerics = Default
     this.userChannelReferences = {};
   }
 
-  updateUsers(users: UserResponse<StreamChatGenerics>[]) {
+  updateUsers(users: UserResponse<ErmisChatGenerics>[]) {
     for (const user of users) {
       this.updateUser(user);
     }
   }
 
-  updateUser(user?: UserResponse<StreamChatGenerics>) {
+  updateUser(user?: UserResponse<ErmisChatGenerics>) {
     if (user != null) {
       this.users[user.id] = user;
     }
   }
 
-  updateUserReference(user: UserResponse<StreamChatGenerics>, channelID: string) {
+  updateUserReference(user: UserResponse<ErmisChatGenerics>, channelID: string) {
     if (user == null) {
       return;
     }

@@ -1,12 +1,12 @@
 {
   "name": "ermis-js-sdk-fork",
   "version": "8.31.0",
-  "description": "JS SDK for the Stream Chat API",
+  "description": "JS SDK for the Ermis Chat API",
   "author": "Ermis",
   "homepage": "https://ermis.network/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GetStream/stream-chat-js.git"
+    "url": "git@gitlab.com:pk7795/ermis-chat-sdk.git"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
@@ -27,9 +27,8 @@
     "messaging",
     "conversation",
     "react",
-    "stream",
-    "getstream",
-    "getstream.io"
+    "ermis",
+    "ermis.network"
   ],
   "files": [
     "/dist",
@@ -137,7 +136,7 @@
     "node": ">=16"
   },
   "bugs": {
-    "url": "https://github.com/GetStream/stream-chat-js/issues"
+    "url": "git@gitlab.com:pk7795/ermis-chat-sdk.git/issues"
   },
   "directories": {
     "doc": "docs",

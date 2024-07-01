@@ -24,18 +24,6 @@ export class InsightMetrics {
  * @param insightType
  * @param insights
  */
-export const postInsights = async (insightType: InsightTypes, insights: Record<string, unknown>) => {
-  const maxAttempts = 3;
-  for (let i = 0; i < maxAttempts; i++) {
-    try {
-      await axios.post(`https://chat-insights.getstream.io/insights/${insightType}`, insights);
-    } catch (e) {
-      await sleep((i + 1) * 3000);
-      continue;
-    }
-    break;
-  }
-};
 
 export function buildWsFatalInsight(connection: StableWSConnection, event: Record<string, unknown>) {
   return {

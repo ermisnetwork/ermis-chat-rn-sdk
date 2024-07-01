@@ -1,12 +1,12 @@
-import { StreamChat } from './client';
+import { ErmisChat } from './client';
 import { CampaignData, DefaultGenerics, ExtendableGenerics } from './types';
 
-export class Campaign<StreamChatGenerics extends ExtendableGenerics = DefaultGenerics> {
+export class Campaign<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> {
   id: string | null;
   data?: CampaignData;
-  client: StreamChat<StreamChatGenerics>;
+  client: ErmisChat<ErmisChatGenerics>;
 
-  constructor(client: StreamChat<StreamChatGenerics>, id: string | null, data?: CampaignData) {
+  constructor(client: ErmisChat<ErmisChatGenerics>, id: string | null, data?: CampaignData) {
     this.client = client;
     this.id = id;
     this.data = data;

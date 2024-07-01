@@ -75,7 +75,7 @@ export function DevToken(userId: string) {
 /**
  *
  * @param {string | Buffer} body the signed message
- * @param {string} secret the shared secret used to generate the signature (Stream API secret)
+ * @param {string} secret the shared secret used to generate the signature (Ermis API secret)
  * @param {string} signature the signature to validate
  * @return {boolean}
  */
