@@ -198,7 +198,7 @@ import {
   QueryReactionsAPIResponse,
   QueryReactionsOptions,
 } from './types';
-import { InsightMetrics, postInsights } from './insights';
+import { InsightMetrics } from './insights';
 import { Thread } from './thread';
 
 function isString(x: unknown): x is string {
@@ -1452,15 +1452,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   _sayHi() {
     const client_request_id = randomId();
     const opts = { headers: { 'x-client-request-id': client_request_id } };
-    this.doAxiosRequest('get', this.baseURL + '/hi', null, opts).catch((e) => {
-      if (this.options.enableInsights) {
-        postInsights('http_hi_failed', {
-          api_key: this.key,
-          err: e,
-          client_request_id,
-        });
-      }
-    });
+    this.doAxiosRequest('get', this.baseURL + '/hi', null, opts).catch((e) => { });
   }
 
   /**

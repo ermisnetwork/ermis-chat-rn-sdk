@@ -8,7 +8,7 @@ import {
   removeConnectionEventListeners,
   addConnectionEventListeners,
 } from './utils';
-import { buildWsFatalInsight, buildWsSuccessAfterFailureInsight, postInsights } from './insights';
+import { buildWsFatalInsight } from './insights';
 import { ConnectAPIResponse, ConnectionOpen, ExtendableGenerics, DefaultGenerics, UR, LogLevel } from './types';
 import { ErmisChat } from './client';
 
@@ -289,10 +289,6 @@ export class StableWSConnection<ErmisChatGenerics extends ExtendableGenerics = D
       if (response) {
         this.connectionID = response.connection_id;
         if (this.client.insightMetrics.wsConsecutiveFailures > 0 && this.client.options.enableInsights) {
-          postInsights(
-            'ws_success_after_failure',
-            buildWsSuccessAfterFailureInsight((this as unknown) as StableWSConnection),
-          );
           this.client.insightMetrics.wsConsecutiveFailures = 0;
         }
         return response;
@@ -305,7 +301,6 @@ export class StableWSConnection<ErmisChatGenerics extends ExtendableGenerics = D
         this.client.insightMetrics.wsTotalFailures++;
 
         const insights = buildWsFatalInsight((this as unknown) as StableWSConnection, convertErrorToJson(err as Error));
-        postInsights?.('ws_fatal', insights);
       }
       throw err;
     }
