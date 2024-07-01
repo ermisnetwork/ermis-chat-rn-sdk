@@ -187,9 +187,8 @@ export class StableWSConnection<StreamChatGenerics extends ExtendableGenerics = 
     const qs = encodeURIComponent(this.client._buildWSPayload(this.requestID));
     const token = this.client.tokenManager.getToken();
 
-    return `${this.client.wsBaseURL}/connect?json=${qs}&api_key=${
-      this.client.key
-    }&authorization=${token}&stream-auth-type=${this.client.getAuthType()}&X-Stream-Client=${this.client.getUserAgent()}`;
+    return `${this.client.wsBaseURL}/connect?json=${qs}&api_key=${this.client.key
+      }&authorization=${token}&stream-auth-type=${this.client.getAuthType()}&X-Stream-Client=${this.client.getUserAgent()}`;
   };
 
   /**

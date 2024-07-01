@@ -472,6 +472,9 @@ export class StreamChat<StreamChatGenerics extends ExtendableGenerics = DefaultG
     user: OwnUserResponse<StreamChatGenerics> | UserResponse<StreamChatGenerics>,
     userTokenOrProvider: TokenOrProvider,
   ) => {
+    this.logger('info', 'client:connectUser() - started', {
+      tags: ['connection', 'client'],
+    });
     if (!user.id) {
       throw new Error('The "id" field on the user is missing');
     }

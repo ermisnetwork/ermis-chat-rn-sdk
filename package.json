@@ -1,10 +1,13 @@
 {
-  "name": "stream-chat",
+  "name": "ermis-js-sdk-fork",
   "version": "8.31.0",
   "description": "JS SDK for the Stream Chat API",
-  "author": "GetStream",
-  "homepage": "https://getstream.io/chat/",
-  "repository": "https://github.com/GetStream/stream-chat-js.git",
+  "author": "Ermis",
+  "homepage": "https://ermis.network/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GetStream/stream-chat-js.git"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
   "jsnext:main": "./dist/index.es.js",
@@ -132,5 +135,12 @@
   },
   "engines": {
     "node": ">=16"
+  },
+  "bugs": {
+    "url": "https://github.com/GetStream/stream-chat-js/issues"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test"
   }
 }
