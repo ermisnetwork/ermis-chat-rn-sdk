@@ -312,7 +312,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
 
     this.axiosInstance = axios.create(this.options);
 
-    this.setBaseURL(this.options.baseURL || 'https://api-staging.ermis.network');
+    this.setBaseURL(this.options.baseURL || 'https://api.ermis.network');
 
     if (typeof process !== 'undefined' && process.env.STREAM_LOCAL_TEST_RUN) {
       this.setBaseURL('http://localhost:3030');
