@@ -974,8 +974,8 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     });
   }
 
-  _logApiError(type: string, url: string, error: unknown) {
-    this.logger('error', `client:${type} - Error - url: ${url}`, {
+  _logApiError(type: string, url: string, error: unknown, options: unknown) {
+    this.logger('error', `client:${type} - Error: ${error} - url: ${url} - options: ${options}`, {
       tags: ['api', 'api_response', 'client'],
       url,
       error,
@@ -992,6 +992,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   ): Promise<T> => {
     await this.tokenManager.tokenReady();
     const requestConfig = this._enrichAxiosOptions(options);
+
     try {
       let response: AxiosResponse<T>;
       this._logApiRequest(type, url, data, requestConfig);
@@ -1026,7 +1027,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any /**TODO: generalize error types  */) {
       e.client_request_id = requestConfig.headers?.['x-client-request-id'];
-      this._logApiError(type, url, e);
+      this._logApiError(type, url, e, options);
       this.consecutiveFailures += 1;
       if (e.response) {
         /** connection_fallback depends on this token expiration logic */
@@ -1035,7 +1036,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
             await sleep(retryInterval(this.consecutiveFailures));
           }
           this.tokenManager.loadToken();
-          return await this.doAxiosRequest<T>(type, url, data, options);
+          return await this.doAxiosRequest<T>(type, url, data, requestConfig);
         }
         return this.handleResponse(e.response);
       } else {
@@ -1052,8 +1053,8 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     return this.doAxiosRequest<T>('put', url, data);
   }
 
-  post<T>(url: string, data?: unknown) {
-    return this.doAxiosRequest<T>('post', url, data);
+  post<T>(url: string, data?: unknown, params?: AxiosRequestConfig['params']) {
+    return this.doAxiosRequest<T>('post', url, data, { params });
   }
 
   patch<T>(url: string, data?: unknown) {
@@ -1458,18 +1459,25 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   /**
    * queryUsers - Query users and watch user presence
    *
-   * @param {UserFilters<ErmisChatGenerics>} filterConditions MongoDB style filter conditions
-   * @param {UserSort<ErmisChatGenerics>} sort Sort options, for instance [{last_active: -1}].
-   * When using multiple fields, make sure you use array of objects to guarantee field order, for instance [{last_active: -1}, {created_at: 1}]
-   * @param {UserOptions} options Option object, {presence: true}
+   * @param {limit} limit Option object, {presence: true}
    *
-   * @return {Promise<{ users: Array<UserResponse<ErmisChatGenerics>> }>} User Query Response
-   */
+   * @return {Promise<{
+  *limit: number;
+  *results: Array<UserResponse<ErmisChatGenerics>>,
+  *page: number,
+  *totalPages: number,
+  *totalResults: number,
+* }>} User Query Response
+ */
   async queryUsers(
-    filterConditions: UserFilters<ErmisChatGenerics>,
-    sort: UserSort<ErmisChatGenerics> = [],
-    options: UserOptions = {},
-  ) {
+    limit: number,
+  ): Promise<{
+    limit: number;
+    results: Array<UserResponse<ErmisChatGenerics>>;
+    page: number;
+    totalPages: number;
+    totalResults: number;
+  }> {
     const defaultOptions = {
       presence: false,
     };
@@ -1482,23 +1490,59 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     }
 
     // Return a list of users
-    const data = await this.get<APIResponse & { users: Array<UserResponse<ErmisChatGenerics>> }>(
-      this.baseURL + '/users',
+    const data = await this.get<APIResponse & {
+      limit: number,
+      results: Array<UserResponse<ErmisChatGenerics>>,
+      page: number,
+      totalPages: number,
+      totalResults: number,
+    }>(
+      // this.baseURL + '/users',
+      this.baseURL + '/uss/v1/users',
       {
         payload: {
-          filter_conditions: filterConditions,
-          sort: normalizeQuerySort(sort),
-          ...defaultOptions,
-          ...options,
+          limit: limit,
         },
       },
     );
 
-    this.state.updateUsers(data.users);
+    this.state.updateUsers(data.results);
 
     return data;
   }
 
+  async queryUser(user_id: string): Promise<UserResponse<ErmisChatGenerics>> {
+    return await this.get<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/' + user_id);
+  }
+
+  // async updateProfile(name: string, about_me: string, file?: any) {
+  //   let body = {
+  //     name,
+  //     about_me,
+  //   };
+  //   let is_continue = true;
+  //   if (file) {
+  //     const formData = new FormData();
+  //     formData.append('avatar', file);
+  //     await this.post<{ avatar: string }>(this.baseURL + '/uss/v1/users/upload', formData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //     }).then((res) => {
+  //       const user = { ...(this.user || {}) };
+  //       const _user = { ...(this._user || {}) };
+  //       this._user = { ..._user, avatar: res.avatar };
+  //       this.user = { ...user, avatar: res.avatar };
+  //     }).catch((err) => {
+  //       is_continue = false;
+  //     });
+  //     if (!is_continue) {
+  //       let response = await this.patch<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/update', body);
+  //       this.state.updateUser(response);
+  //     }
+  //   }
+
+  // }
   /**
    * queryBannedUsers - Query user bans
    *
@@ -2785,7 +2829,10 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       config: {},
     },
   ): AxiosRequestConfig {
-    const token = this._getToken();
+    let token = this._getToken();
+    if (!token?.startsWith('Bearer ')) {
+      token = `Bearer ${token}`;
+    }
     const authorization = token ? { Authorization: token } : undefined;
     let signal: AbortSignal | null = null;
     if (this.nextRequestAbortController !== null) {
@@ -2799,7 +2846,6 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
         'x-client-request-id': randomId(),
       };
     }
-
     const { params: axiosRequestConfigParams, headers: axiosRequestConfigHeaders, ...axiosRequestConfigRest } =
       this.options.axiosRequestConfig || {};
 

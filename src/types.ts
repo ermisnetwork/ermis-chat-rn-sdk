@@ -72,7 +72,7 @@ export type Unpacked<T> = T extends (infer U)[]
  */
 
 export type APIResponse = {
-  duration: string;
+  duration?: string;
 };
 
 export type AppSettingsAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = APIResponse & {
@@ -2657,6 +2657,10 @@ export type User<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics>
   role?: string;
   teams?: string[];
   username?: string;
+  about_me?: string;
+  avatar?: string;
+  email?: string;
+  phone?: string;
 };
 
 export type TaskResponse = {
