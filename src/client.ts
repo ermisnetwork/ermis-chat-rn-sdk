@@ -958,7 +958,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       config?: AxiosRequestConfig & { maxBodyLength?: number };
     },
   ) {
-    this.logger('info', `client: ${type} - Request - ${url}`, {
+    this.logger('info', `client: ${type} - Request - ${url}- ${data} - ${JSON.stringify(config.params)}`, {
       tags: ['api', 'api_request', 'client'],
       url,
       payload: data,
@@ -992,7 +992,6 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   ): Promise<T> => {
     await this.tokenManager.tokenReady();
     const requestConfig = this._enrichAxiosOptions(options);
-
     try {
       let response: AxiosResponse<T>;
       this._logApiRequest(type, url, data, requestConfig);
@@ -1515,34 +1514,56 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     return await this.get<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/' + user_id);
   }
 
-  // async updateProfile(name: string, about_me: string, file?: any) {
-  //   let body = {
-  //     name,
-  //     about_me,
-  //   };
-  //   let is_continue = true;
-  //   if (file) {
-  //     const formData = new FormData();
-  //     formData.append('avatar', file);
-  //     await this.post<{ avatar: string }>(this.baseURL + '/uss/v1/users/upload', formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     }).then((res) => {
-  //       const user = { ...(this.user || {}) };
-  //       const _user = { ...(this._user || {}) };
-  //       this._user = { ..._user, avatar: res.avatar };
-  //       this.user = { ...user, avatar: res.avatar };
-  //     }).catch((err) => {
-  //       is_continue = false;
-  //     });
-  //     if (!is_continue) {
-  //       let response = await this.patch<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/update', body);
-  //       this.state.updateUser(response);
-  //     }
-  //   }
+  async updateProfile(name: string, about_me: string, file?: any) {
+    let body = {
+      name,
+      about_me,
+    };
+    let is_continue = true;
+    if (file) {
+      const formData = new FormData();
+      formData.append('avatar', file);
+      await this.post<{ avatar: string }>(this.baseURL + '/uss/v1/users/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }).then((res) => {
+        if (this.user) {
+          this.user.avatar = res.avatar;
+        }
+        if (this._user) {
+          this._user.avatar = res.avatar;
+        }
+      }).catch((err) => {
+        is_continue = false;
+      });
+      if (is_continue) {
+        let response = await this.patch<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/update', body);
+        this.user = response;
+      }
+    }
 
-  // }
+  }
+
+  async searchUsers(name: string, page: number = 1): Promise<{
+    limit: number;
+    results: Array<UserResponse<ErmisChatGenerics>>;
+    page: number;
+    totalPages: number;
+    totalResults: number;
+  }> {
+    let response = await this.get<{
+      limit: number;
+      results: Array<UserResponse<ErmisChatGenerics>>;
+      page: number;
+      totalPages: number;
+      totalResults: number;
+    }>(this.baseURL + '/uss/v1/users', {
+      name,
+      page,
+    });
+    return response;
+  }
   /**
    * queryBannedUsers - Query user bans
    *
