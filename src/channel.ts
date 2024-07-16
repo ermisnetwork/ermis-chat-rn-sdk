@@ -318,12 +318,9 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
     if (!reaction || Object.keys(reaction).length === 0) {
       throw Error(`Reaction object is missing`);
     }
+    const react_type = reaction.type;
     return await this.getClient().post<ReactionAPIResponse<ErmisChatGenerics>>(
-      this.getClient().baseURL + `/messages/${messageID}/reaction`,
-      {
-        reaction,
-        ...options,
-      },
+      this.getClient().baseURL + `/messages/${this.type}/${this.id}/${messageID}/reaction/${react_type}`
     );
   }
 
@@ -332,21 +329,25 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
    *
    * @param {string} messageID the id of the message from which te remove the reaction
    * @param {string} reactionType the type of reaction that should be removed
-   * @param {string} [user_id] the id of the user (used only for server side request) default null
+   * @param {string} [user_id] the id of the user (used only for server side request) default nullz
    *
    * @return {Promise<ReactionAPIResponse<ErmisChatGenerics>>} The Server Response
    */
-  deleteReaction(messageID: string, reactionType: string, user_id?: string) {
+  deleteReaction(
+    messageID: string,
+    reactionType: string,
+    user_id?: string
+  ) {
     this._checkInitialized();
     if (!reactionType || !messageID) {
       throw Error('Deleting a reaction requires specifying both the message and reaction type');
     }
 
-    const url = this.getClient().baseURL + `/messages/${messageID}/reaction/${reactionType}`;
+    const url = this.getClient().baseURL + `/messages/${this.type}/${this.id}/${messageID}/reaction/${reactionType}`;
     //provided when server side request
-    if (user_id) {
-      return this.getClient().delete<ReactionAPIResponse<ErmisChatGenerics>>(url, { user_id });
-    }
+    // if (user_id) {
+    //   return this.getClient().delete<ReactionAPIResponse<ErmisChatGenerics>>(url, { user_id });
+    // }
 
     return this.getClient().delete<ReactionAPIResponse<ErmisChatGenerics>>(url, {});
   }
