@@ -911,13 +911,13 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
       return this.state.read[userID] ? this.state.read[userID].last_read : null;
     }
   }
-
+  // TODO: KhoaKheu Add mute Users later, confict here
   _countMessageAsUnread(message: FormatMessageResponse<ErmisChatGenerics> | MessageResponse<ErmisChatGenerics>) {
     if (message.shadowed) return false;
     if (message.silent) return false;
     if (message.parent_id && !message.show_in_channel) return false;
     if (message.user?.id === this.getClient().userID) return false;
-    if (message.user?.id && this.getClient().userMuteStatus(message.user.id)) return false;
+    // if (message.user?.id && this.getClient().userMuteStatus(message.user.id)) return false;
     if (message.type === 'system') return false;
 
     // Return false if channel doesn't allow read events.
