@@ -1760,7 +1760,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
    *
    */
   async addDevice(id: string, push_provider: PushProvider, userID?: string, push_provider_name?: string) {
-    return await this.post<APIResponse>(this.baseURL + '/devices', {
+    return await this.post<APIResponse>(this.baseURL + '/devices/add', {
       id,
       push_provider,
       ...(userID != null ? { user_id: userID } : {}),
@@ -1812,7 +1812,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
    *
    */
   async removeDevice(id: string, userID?: string) {
-    return await this.delete<APIResponse>(this.baseURL + '/devices', {
+    return await this.post<APIResponse>(this.baseURL + '/devices/delete', {
       id,
       ...(userID ? { user_id: userID } : {}),
     });
