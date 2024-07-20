@@ -1514,8 +1514,20 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   async queryUser(user_id: string): Promise<UserResponse<ErmisChatGenerics>> {
     return await this.get<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/' + user_id);
   }
-  async searchUsers(users: string[]): Promise<UserResponse<ErmisChatGenerics>[]> {
-    return await this.post<UserResponse<ErmisChatGenerics>[]>(this.baseURL + '/uss/v1/users', { users });
+  async searchUsers(users: string[]): Promise<{
+    limit: number;
+    results: Array<UserResponse<ErmisChatGenerics>>;
+    page: number;
+    totalPages: number;
+    totalResults: number;
+  }> {
+    return await this.post<{
+      limit: number;
+      results: Array<UserResponse<ErmisChatGenerics>>;
+      page: number;
+      totalPages: number;
+      totalResults: number;
+    }>(this.baseURL + '/uss/v1/users', { users });
   }
   async uploadFile(file: any) {
     const formData = new FormData();
@@ -2849,14 +2861,19 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     const { params: axiosRequestConfigParams, headers: axiosRequestConfigHeaders, ...axiosRequestConfigRest } =
       this.options.axiosRequestConfig || {};
 
+    let user_service_params = this._hasConnectionID() ? {
+      user_id: this.userID,
+      connection_id: this._getConnectionID(),
+      api_key: this.key,
+      ...options.params,
+      ...(axiosRequestConfigParams || {}),
+    } : {
+      ...options.params,
+      ...(axiosRequestConfigParams || {}),
+    }
+
     return {
-      params: {
-        user_id: this.userID,
-        connection_id: this._getConnectionID(),
-        api_key: this.key,
-        ...options.params,
-        ...(axiosRequestConfigParams || {}),
-      },
+      params: user_service_params,
       headers: {
         ...authorization,
         'stream-auth-type': this.getAuthType(),
