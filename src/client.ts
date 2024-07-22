@@ -1546,6 +1546,8 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     );
     if (this.user) {
       this.user.avatar = response.avatar;
+      const new_user = { ...this.user, avatar: response.avatar };
+      this.state.updateUser(new_user);
     }
     if (this._user) {
       this._user.avatar = response.avatar;
@@ -1560,6 +1562,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     let response = await this.patch<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/update', body, true);
     this.user = response;
     this._user = response;
+    this.state.updateUser(response);
     return response;
   }
   /**
