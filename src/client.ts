@@ -983,6 +983,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   }
 
   doAxiosRequest = async <T>(
+    isThirdPartyRequest: boolean,
     type: string,
     url: string,
     data?: unknown,
@@ -991,7 +992,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     } = {},
   ): Promise<T> => {
     await this.tokenManager.tokenReady();
-    const requestConfig = this._enrichAxiosOptions(options);
+    const requestConfig = this._enrichAxiosOptions(isThirdPartyRequest, options);
     try {
       let response: AxiosResponse<T>;
       this._logApiRequest(type, url, data, requestConfig);
@@ -1035,7 +1036,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
             await sleep(retryInterval(this.consecutiveFailures));
           }
           this.tokenManager.loadToken();
-          return await this.doAxiosRequest<T>(type, url, data, requestConfig);
+          return await this.doAxiosRequest<T>(isThirdPartyRequest, type, url, data, requestConfig);
         }
         return this.handleResponse(e.response);
       } else {
@@ -1044,24 +1045,24 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     }
   };
 
-  get<T>(url: string, params?: AxiosRequestConfig['params']) {
-    return this.doAxiosRequest<T>('get', url, null, { params });
+  get<T>(url: string, params?: AxiosRequestConfig['params'], isThirdPartyRequest: boolean = false) {
+    return this.doAxiosRequest<T>(isThirdPartyRequest, 'get', url, null, { params });
   }
 
-  put<T>(url: string, data?: unknown) {
-    return this.doAxiosRequest<T>('put', url, data);
+  put<T>(url: string, data?: unknown, isThirdPartyRequest: boolean = false) {
+    return this.doAxiosRequest<T>(isThirdPartyRequest, 'put', url, data);
   }
 
-  post<T>(url: string, data?: unknown, params?: AxiosRequestConfig['params']) {
-    return this.doAxiosRequest<T>('post', url, data, { params });
+  post<T>(url: string, data?: unknown, params?: AxiosRequestConfig['params'], isThirdPartyRequest: boolean = false) {
+    return this.doAxiosRequest<T>(isThirdPartyRequest, 'post', url, data, { params });
   }
 
-  patch<T>(url: string, data?: unknown) {
-    return this.doAxiosRequest<T>('patch', url, data);
+  patch<T>(url: string, data?: unknown, isThirdPartyRequest: boolean = false) {
+    return this.doAxiosRequest<T>(isThirdPartyRequest, 'patch', url, data);
   }
 
-  delete<T>(url: string, params?: AxiosRequestConfig['params']) {
-    return this.doAxiosRequest<T>('delete', url, null, { params });
+  delete<T>(url: string, params?: AxiosRequestConfig['params'], isThirdPartyRequest: boolean = false) {
+    return this.doAxiosRequest<T>(isThirdPartyRequest, 'delete', url, null, { params });
   }
 
   sendFile(
@@ -1074,7 +1075,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     const data = addFileToFormData(uri, name, contentType || 'multipart/form-data');
     if (user != null) data.append('user', JSON.stringify(user));
 
-    return this.doAxiosRequest<SendFileAPIResponse>('postForm', url, data, {
+    return this.doAxiosRequest<SendFileAPIResponse>(false, 'postForm', url, data, {
       headers: data.getHeaders ? data.getHeaders() : {}, // node vs browser
       config: {
         timeout: 0,
@@ -1452,7 +1453,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   _sayHi() {
     const client_request_id = randomId();
     const opts = { headers: { 'x-client-request-id': client_request_id } };
-    this.doAxiosRequest('get', this.baseURL + '/hi', null, opts).catch((e) => { });
+    this.doAxiosRequest(false, 'get', this.baseURL + '/hi', null, opts).catch((e) => { });
   }
 
   /**
@@ -1503,7 +1504,8 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
         name,
         page,
         limit
-      }
+      },
+      true
     );
 
     this.state.updateUsers(data.results);
@@ -1512,7 +1514,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   }
 
   async queryUser(user_id: string): Promise<UserResponse<ErmisChatGenerics>> {
-    return await this.get<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/' + user_id);
+    return await this.get<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/' + user_id, undefined, true);
   }
   async searchUsers(users: string[]): Promise<{
     limit: number;
@@ -1527,16 +1529,21 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       page: number;
       totalPages: number;
       totalResults: number;
-    }>(this.baseURL + '/uss/v1/users', { users });
+    }>(this.baseURL + '/uss/v1/users', { users }, undefined, true);
   }
   async uploadFile(file: any) {
     const formData = new FormData();
     formData.append('avatar', file);
-    let response = await this.post<{ avatar: string }>(this.baseURL + '/uss/v1/users/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    let response = await this.post<{ avatar: string }>(
+      this.baseURL + '/uss/v1/users/upload',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       },
-    });
+      true
+    );
     if (this.user) {
       this.user.avatar = response.avatar;
     }
@@ -1545,12 +1552,12 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     }
     return response;
   }
-  async updateProfile(name: string, about_me: string, file?: any) {
+  async updateProfile(name: string, about_me: string) {
     let body = {
       name,
       about_me,
     };
-    let response = await this.patch<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/update', body);
+    let response = await this.patch<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/update', body, true);
     this.user = response;
     this._user = response;
     return response;
@@ -2835,6 +2842,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   _isUsingServerAuth = () => !!this.secret;
 
   _enrichAxiosOptions(
+    isThirdPartyRequest: boolean,
     options: AxiosRequestConfig & { config?: AxiosRequestConfig } = {
       params: {},
       headers: {},
@@ -2845,6 +2853,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     if (!token?.startsWith('Bearer ')) {
       token = `Bearer ${token}`;
     }
+
     const authorization = token ? { Authorization: token } : undefined;
     let signal: AbortSignal | null = null;
     if (this.nextRequestAbortController !== null) {
@@ -2861,13 +2870,13 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     const { params: axiosRequestConfigParams, headers: axiosRequestConfigHeaders, ...axiosRequestConfigRest } =
       this.options.axiosRequestConfig || {};
 
-    let user_service_params = this._hasConnectionID() ? {
-      user_id: this.userID,
-      connection_id: this._getConnectionID(),
-      api_key: this.key,
+    let user_service_params = isThirdPartyRequest ? {
       ...options.params,
       ...(axiosRequestConfigParams || {}),
     } : {
+      user_id: this.userID,
+      connection_id: this._getConnectionID(),
+      api_key: this.key,
       ...options.params,
       ...(axiosRequestConfigParams || {}),
     }

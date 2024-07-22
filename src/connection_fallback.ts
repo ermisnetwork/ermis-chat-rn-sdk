@@ -70,6 +70,7 @@ export class WSConnectionFallback<ErmisChatGenerics extends ExtendableGenerics =
 
     try {
       const res = await this.client.doAxiosRequest<T>(
+        false,
         'get',
         (this.client.baseURL as string).replace(':3030', ':8900') + '/longpoll', // replace port if present for testing with local API
         undefined,
