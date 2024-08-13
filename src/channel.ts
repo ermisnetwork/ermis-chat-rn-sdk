@@ -477,7 +477,8 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
    * @return {Promise<UpdateChannelAPIResponse<ErmisChatGenerics>>} The server response
    */
   async acceptInvite(options: InviteOptions<ErmisChatGenerics> = {}) {
-    return await this._update({ accept_invite: true, ...options });
+    const url = this.getClient().baseURL + `/invites/${this.type}/${this.id}/accept`;
+    return this.getClient().post<APIResponse>(url);
   }
 
   /**
@@ -488,7 +489,8 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
    * @return {Promise<UpdateChannelAPIResponse<ErmisChatGenerics>>} The server response
    */
   async rejectInvite(options: InviteOptions<ErmisChatGenerics> = {}) {
-    return await this._update({ reject_invite: true, ...options });
+    const url = this.getClient().baseURL + `/invites/${this.type}/${this.id}/reject`;
+    return this.getClient().post<APIResponse>(url);
   }
 
   /**
@@ -1494,6 +1496,8 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
           user: { ...(channelState.members[event.user.id]?.user || {}), ...event.user },
         };
         break;
+      case 'notification.invite_accepted':
+
       default:
     }
 

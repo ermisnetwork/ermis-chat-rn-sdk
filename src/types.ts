@@ -828,7 +828,12 @@ export type UserResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultG
   shadow_banned?: boolean;
   updated_at?: string;
 };
-
+export type Contact = {
+  project_id?: string;
+}
+export type ContactResponse = {
+  user_ids: string[];
+};
 export type PrivacySettings = {
   read_receipts?: {
     enabled?: boolean;
@@ -1454,6 +1459,8 @@ export type ChannelFilters<ErmisChatGenerics extends ExtendableGenerics = Defaul
         userType: ErmisChatGenerics['userType'];
       }>[Key]
     >;
+  } & {
+    roles?: RequireOnlyOne<Pick<QueryFilter<string[]>, '$eq'> | PrimitiveFilter<string[]>>;
   }
 >;
 

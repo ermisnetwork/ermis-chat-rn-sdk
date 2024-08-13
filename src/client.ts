@@ -197,6 +197,8 @@ import {
   ReactionSort,
   QueryReactionsAPIResponse,
   QueryReactionsOptions,
+  ContactResponse,
+  Contact,
 } from './types';
 import { InsightMetrics } from './insights';
 import { Thread } from './thread';
@@ -210,6 +212,9 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
 
   _user?: OwnUserResponse<ErmisChatGenerics> | UserResponse<ErmisChatGenerics>;
   activeChannels: {
+    [key: string]: Channel<ErmisChatGenerics>;
+  };
+  invitedChannels: {
     [key: string]: Channel<ErmisChatGenerics>;
   };
   anonymous: boolean;
@@ -328,6 +333,9 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     this.setUserPromise = null;
     // keeps a reference to all the channels that are in use
     this.activeChannels = {};
+    //
+    this.invitedChannels = {};
+
     // mapping between channel groups and configs
     this.configs = {};
     this.anonymous = false;
@@ -1301,7 +1309,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       activeChannelKeys.forEach((activeChannelKey) => (this.activeChannels[activeChannelKey].state.unreadCount = 0));
     }
 
-    if ((event.type === 'channel.deleted' || event.type === 'notification.channel_deleted') && event.cid) {
+    if ((event.type === 'channel.deleted' || event.type === 'notification.channel_deleted' || event.type === 'notification.invite_rejected') && event.cid) {
       client.state.deleteAllChannelReference(event.cid);
       this.activeChannels[event.cid]?._disconnect();
 
@@ -1311,7 +1319,9 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
         delete this.activeChannels[event.cid];
       });
     }
-
+    if ((event.type === 'notification.invite_accepted')) {
+      //TODO handle channel list and invited channels here
+    }
     return postListenerCallbacks;
   }
 
@@ -1530,6 +1540,9 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       totalPages: number;
       totalResults: number;
     }>(this.baseURL + '/uss/v1/users', { users }, undefined, true);
+  }
+  async queryContacts(contact: Contact = {}): Promise<ContactResponse> {
+    return await this.get<ContactResponse>(this.baseURL + '/contacts/list', contact, true);
   }
   async uploadFile(file: any) {
     const formData = new FormData();
