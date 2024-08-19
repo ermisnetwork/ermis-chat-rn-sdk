@@ -66,6 +66,11 @@ export type Unpacked<T> = T extends (infer U)[]
   : T extends Promise<infer U>
   ? U
   : T;
+/**
+ * Server Types
+ * filter for api request config
+ */
+export type ServerType = 'chat' | 'user' | 'wallet';
 
 /**
  * Response Types
@@ -3098,3 +3103,48 @@ export type PollVotesAPIResponse<ErmisChatGenerics extends ExtendableGenerics = 
 export type CastVoteAPIResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   vote: PollVote<ErmisChatGenerics>;
 };
+/*
+** This types are used for the wallet feature
+*/
+export type StartAuthResponse = {
+  challenge: string;
+};
+export type GetTokenResponse = {
+  token: string;
+  refresh_token: string;
+  user_id: string;
+  project_id: string;
+};
+export type UsersResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  data: Array<UserResponse<ErmisChatGenerics>>;
+  count: number;
+  total: number;
+  page: number;
+  page_count: number;
+}
+/*
+** Chain Project Response
+*/
+export type Project = {
+  project_name: string;
+  project_id: string;
+  display: string;
+  description: string;
+  image?: string;
+}
+export type UserWithProjectsResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  client_name: string;
+  client_id: string;
+  client_image?: string;
+  projects: Project[];
+}
+export type ChainProjectResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  chain_id: number;
+  clients: UserWithProjectsResponse<ErmisChatGenerics>[];
+}
+
+export type ChainsResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+  chain: number[];
+  joined: ChainProjectResponse<ErmisChatGenerics>[];
+  not_joined: ChainProjectResponse<ErmisChatGenerics>[];
+}
