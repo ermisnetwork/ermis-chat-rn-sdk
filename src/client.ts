@@ -209,7 +209,7 @@ import { Thread } from './thread';
 function isString(x: unknown): x is string {
   return typeof x === 'string' || x instanceof String;
 }
-
+const ERMIS_PROJECT_ID = "6fbdecb0-1ec8-4e32-99d7-ff2683e308b7";
 export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> {
   private static _instance?: unknown | ErmisChat; // type is undefined|ErmisChat, unknown is due to TS limitations with statics
 
@@ -260,6 +260,10 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   insightMetrics: InsightMetrics;
   defaultWSTimeoutWithFallback: number;
   defaultWSTimeout: number;
+
+  // Chain
+  chains?: ChainsResponse<ErmisChatGenerics>;
+  project_id?: string;
   private nextRequestAbortController: AbortController | null = null;
 
   /**
@@ -405,6 +409,12 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
      */
     this.logger = isFunction(inputOptions.logger) ? inputOptions.logger : () => null;
     this.recoverStateOnReconnect = this.options.recoverStateOnReconnect;
+    this.chains = {
+      chain: [],
+      joined: [],
+      not_joined: [],
+    }
+    this.project_id = ERMIS_PROJECT_ID;
   }
 
   /**
@@ -1485,7 +1495,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
 * }>} User Query Response
  */
   async queryUsers(
-    project_id?: number,
+    project_id?: string,
     page_size?: string,
     page?: number
   ): Promise<UsersResponse> {
@@ -1499,12 +1509,12 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     if (!this._hasConnectionID()) {
       defaultOptions.presence = false;
     }
-
+    let request_project_id = project_id || this.project_id;
     // Return a list of users
     const data = await this.get<UsersResponse>(
       this.baseURL + '/uss/v1/users',
       {
-        project_id,
+        request_project_id,
         page,
         page_size
       },
@@ -1519,18 +1529,27 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   async queryUser(user_id: string): Promise<UserResponse<ErmisChatGenerics>> {
     return await this.get<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/' + user_id, undefined, 'user');
   }
-  async getBatchUsers(users: string[], project_id: string, page: number, page_size: number): Promise<UsersResponse> {
-    return await this.post<UsersResponse>(this.baseURL + '/uss/v1/users/batch', { users, project_id }, { page, page_size }, 'user');
+  async getBatchUsers(users: string[], page?: number, page_size?: number, project_id?: string,): Promise<UsersResponse> {
+    let request_project_id = project_id || this.project_id;
+    return await this.post<UsersResponse>(this.baseURL + '/uss/v1/users/batch', { users, project_id: request_project_id }, { page, page_size }, 'user');
   }
   async searchUsers(page: number, page_size: number, name?: string, project_id?: string): Promise<UsersResponse> {
-    return await this.post<UsersResponse>(this.baseURL + '/uss/v1/users/search', undefined, { page, page_size, name, project_id }, 'user');
+    let request_project_id = project_id || this.project_id;
+    return await this.post<UsersResponse>(this.baseURL + '/uss/v1/users/search', undefined, { page, page_size, name, project_id: request_project_id }, 'user');
   }
-  async queryContacts(contact: Contact = {}): Promise<ContactResponse> {
-    return await this.get<ContactResponse>(this.baseURL + '/contacts/list', contact, 'user');
+  async queryContacts(projectID?: string): Promise<ContactResponse> {
+    let project_id = projectID || this.project_id;
+    return await this.get<ContactResponse>(this.baseURL + '/contacts/list', { project_id }, 'user');
   }
   async getChains(): Promise<ChainsResponse> {
-    return await this.get<ChainsResponse>(this.baseURL + '/uss/v1/users/chains', undefined, 'user');
+    let chain_response = await this.get<ChainsResponse>(this.baseURL + '/uss/v1/users/chains', undefined, 'user');
+    this.chains = chain_response;
+    return chain_response;
   }
+  _updateProjectID(project_id: string) {
+    this.project_id = project_id;
+  }
+
   async uploadFile(file: any) {
     const formData = new FormData();
     formData.append('avatar', file);
@@ -1633,10 +1652,11 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     if (!this._hasConnectionID()) {
       defaultOptions.watch = false;
     }
+    let project_id = filterConditions.project_id || this.project_id;
 
     // Return a list of channels
     const payload = {
-      filter_conditions: filterConditions,
+      filter_conditions: { ...filterConditions, project_id },
       sort: normalizeQuerySort(sort),
       ...defaultOptions,
       ...options,
@@ -1995,9 +2015,12 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
    * @return {channel} The channel object, initialize it using channel.watch()
    */
   getChannelById = (channelType: string, channelID: string, custom: ChannelData<ErmisChatGenerics>) => {
-    if (typeof channelID === 'string' && ~channelID.indexOf(':')) {
-      throw Error(`Invalid channel id ${channelID}, can't contain the : character`);
-    }
+    /**
+     * don't handle channelID without : character anymore
+     */
+    // if (typeof channelID === 'string' && ~channelID.indexOf(':')) {
+    //   throw Error(`Invalid channel id ${channelID}, can't contain the : character`);
+    // }
 
     // only allow 1 channel object per cid
     const cid = `${channelType}:${channelID}`;

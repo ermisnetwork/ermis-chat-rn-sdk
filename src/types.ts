@@ -911,6 +911,7 @@ export type ChannelQueryOptions<ErmisChatGenerics extends ExtendableGenerics = D
   state?: boolean;
   watch?: boolean;
   watchers?: PaginationOptions;
+  project_id?: string;
 };
 
 export type ChannelStateOptions = {
@@ -1466,6 +1467,10 @@ export type ChannelFilters<ErmisChatGenerics extends ExtendableGenerics = Defaul
     >;
   } & {
     roles?: RequireOnlyOne<Pick<QueryFilter<string[]>, '$eq'> | PrimitiveFilter<string[]>>;
+  } & {
+    other_roles?: RequireOnlyOne<Pick<QueryFilter<string[]>, '$eq'> | PrimitiveFilter<string[]>>;
+  } & {
+    project_id?: RequireOnlyOne<Pick<QueryFilter<string>, '$eq'> | PrimitiveFilter<string>>;
   }
 >;
 

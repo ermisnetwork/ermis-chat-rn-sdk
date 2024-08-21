@@ -109,7 +109,7 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
     data: ChannelData<ErmisChatGenerics>,
   ) {
     const validTypeRe = /^[\w_-]+$/;
-    const validIDRe = /^[\w!_-]+$/;
+    const validIDRe = /^[\w!]+$/;
 
     if (!validTypeRe.test(type)) {
       throw new Error(`Invalid chat type ${type}, letters, numbers and "_-" are allowed`);
@@ -1007,6 +1007,9 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
     // Make sure we wait for the connect promise if there is a pending one
     await this.getClient().wsPromise;
 
+    let project_id = options.project_id || this._client.project_id;
+    let update_options = { ...options, project_id };
+
     let queryURL = `${this.getClient().baseURL}/channels/${this.type}`;
     if (this.id) {
       queryURL += `/${this.id}`;
@@ -1015,7 +1018,7 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
     const state = await this.getClient().post<QueryChannelAPIResponse<ErmisChatGenerics>>(queryURL + '/query', {
       data: this._data,
       state: true,
-      ...options,
+      ...update_options,
     });
 
     // update the channel id if it was missing
