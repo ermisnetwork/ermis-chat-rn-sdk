@@ -976,11 +976,11 @@ export type DeactivateUsersOptions = {
 export type InviteOptions<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
   accept_invite?: boolean;
   add_members?: string[];
-  add_moderators?: string[];
+  promote_members?: string[];
   client_id?: string;
   connection_id?: string;
   data?: Omit<ChannelResponse<ErmisChatGenerics>, 'id' | 'cid'>;
-  demote_moderators?: string[];
+  demote_members?: string[];
   invites?: string[];
   message?: MessageResponse<ErmisChatGenerics>;
   reject_invite?: boolean;

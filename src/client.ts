@@ -209,7 +209,7 @@ import { Thread } from './thread';
 function isString(x: unknown): x is string {
   return typeof x === 'string' || x instanceof String;
 }
-const ERMIS_PROJECT_ID = "6fbdecb0-1ec8-4e32-99d7-ff2683e308b7";
+const ERMIS_PROJECT_ID = '6fbdecb0-1ec8-4e32-99d7-ff2683e308b7';
 export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> {
   private static _instance?: unknown | ErmisChat; // type is undefined|ErmisChat, unknown is due to TS limitations with statics
 
@@ -413,7 +413,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       chains: [],
       joined: [],
       not_joined: [],
-    }
+    };
     this.project_id = ERMIS_PROJECT_ID;
   }
 
@@ -955,10 +955,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
    */
   off(callback: EventHandler<ErmisChatGenerics>): void;
   off(eventType: string, callback: EventHandler<ErmisChatGenerics>): void;
-  off(
-    callbackOrString: EventHandler<ErmisChatGenerics> | string,
-    callbackOrNothing?: EventHandler<ErmisChatGenerics>,
-  ) {
+  off(callbackOrString: EventHandler<ErmisChatGenerics> | string, callbackOrNothing?: EventHandler<ErmisChatGenerics>) {
     const key = callbackOrNothing ? (callbackOrString as string) : 'all';
     const callback = callbackOrNothing ? callbackOrNothing : (callbackOrString as EventHandler<ErmisChatGenerics>);
     if (!(key in this.listeners)) {
@@ -979,12 +976,16 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       config?: AxiosRequestConfig & { maxBodyLength?: number };
     },
   ) {
-    this.logger('info', `client: ${type} - Request - ${url}- ${JSON.stringify(data)} - ${JSON.stringify(config.params)}`, {
-      tags: ['api', 'api_request', 'client'],
-      url,
-      payload: data,
-      config,
-    });
+    this.logger(
+      'info',
+      `client: ${type} - Request - ${url}- ${JSON.stringify(data)} - ${JSON.stringify(config.params)}`,
+      {
+        tags: ['api', 'api_request', 'client'],
+        url,
+        payload: data,
+        config,
+      },
+    );
   }
 
   _logApiResponse<T>(type: string, url: string, response: AxiosResponse<T>) {
@@ -996,11 +997,15 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   }
 
   _logApiError(type: string, url: string, error: unknown, options: unknown) {
-    this.logger('error', `client:${type} - Error: ${JSON.stringify(error)} - url: ${url} - options: ${JSON.stringify(options)}`, {
-      tags: ['api', 'api_response', 'client'],
-      url,
-      error,
-    });
+    this.logger(
+      'error',
+      `client:${type} - Error: ${JSON.stringify(error)} - url: ${url} - options: ${JSON.stringify(options)}`,
+      {
+        tags: ['api', 'api_response', 'client'],
+        url,
+        error,
+      },
+    );
   }
 
   doAxiosRequest = async <T>(
@@ -1324,7 +1329,12 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       activeChannelKeys.forEach((activeChannelKey) => (this.activeChannels[activeChannelKey].state.unreadCount = 0));
     }
 
-    if ((event.type === 'channel.deleted' || event.type === 'notification.channel_deleted' || event.type === 'notification.invite_rejected') && event.cid) {
+    if (
+      (event.type === 'channel.deleted' ||
+        event.type === 'notification.channel_deleted' ||
+        event.type === 'notification.invite_rejected') &&
+      event.cid
+    ) {
       client.state.deleteAllChannelReference(event.cid);
       this.activeChannels[event.cid]?._disconnect();
 
@@ -1334,7 +1344,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
         delete this.activeChannels[event.cid];
       });
     }
-    if ((event.type === 'notification.invite_accepted')) {
+    if (event.type === 'notification.invite_accepted') {
       //TODO handle channel list and invited channels here
     }
     return postListenerCallbacks;
@@ -1478,7 +1488,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   _sayHi() {
     const client_request_id = randomId();
     const opts = { headers: { 'x-client-request-id': client_request_id } };
-    this.doAxiosRequest('chat', 'get', this.baseURL + '/hi', null, opts).catch((e) => { });
+    this.doAxiosRequest('chat', 'get', this.baseURL + '/hi', null, opts).catch((e) => {});
   }
 
   /**
@@ -1487,18 +1497,14 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
    * @param {project_id} project_id Option number, just to filter users by project_id,(client doesn't nead to care about this)
    *
    * @return {Promise<{
-  *data: Array<UserResponse<ErmisChatGenerics>>,
-  *count: number,
-  *total: number,
-  *page: number,
-  *page_count: number,
-* }>} User Query Response
- */
-  async queryUsers(
-    project_id?: string,
-    page_size?: string,
-    page?: number
-  ): Promise<UsersResponse> {
+   *data: Array<UserResponse<ErmisChatGenerics>>,
+   *count: number,
+   *total: number,
+   *page: number,
+   *page_count: number,
+   * }>} User Query Response
+   */
+  async queryUsers(project_id?: string, page_size?: string, page?: number): Promise<UsersResponse> {
     const defaultOptions = {
       presence: false,
     };
@@ -1516,9 +1522,9 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       {
         request_project_id,
         page,
-        page_size
+        page_size,
       },
-      'user'
+      'user',
     );
 
     this.state.updateUsers(data.data);
@@ -1527,15 +1533,29 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   }
 
   async queryUser(user_id: string): Promise<UserResponse<ErmisChatGenerics>> {
-    return await this.get<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/' + user_id, undefined, 'user');
+    return await this.get<UserResponse<ErmisChatGenerics>>(
+      this.baseURL + '/uss/v1/users/' + user_id,
+      undefined,
+      'user',
+    );
   }
-  async getBatchUsers(users: string[], page?: number, page_size?: number, project_id?: string,): Promise<UsersResponse> {
+  async getBatchUsers(users: string[], page?: number, page_size?: number, project_id?: string): Promise<UsersResponse> {
     let request_project_id = project_id || this.project_id;
-    return await this.post<UsersResponse>(this.baseURL + '/uss/v1/users/batch', { users, project_id: request_project_id }, { page, page_size }, 'user');
+    return await this.post<UsersResponse>(
+      this.baseURL + '/uss/v1/users/batch',
+      { users, project_id: request_project_id },
+      { page, page_size },
+      'user',
+    );
   }
   async searchUsers(page: number, page_size: number, name?: string, project_id?: string): Promise<UsersResponse> {
     let request_project_id = project_id || this.project_id;
-    return await this.post<UsersResponse>(this.baseURL + '/uss/v1/users/search', undefined, { page, page_size, name, project_id: request_project_id }, 'user');
+    return await this.post<UsersResponse>(
+      this.baseURL + '/uss/v1/users/search',
+      undefined,
+      { page, page_size, name, project_id: request_project_id },
+      'user',
+    );
   }
   async queryContacts(projectID?: string): Promise<ContactResponse> {
     let project_id = projectID || this.project_id;
@@ -1561,7 +1581,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
           'Content-Type': 'multipart/form-data',
         },
       },
-      'user'
+      'user',
     );
     if (this.user) {
       this.user.avatar = response.avatar;
@@ -1578,7 +1598,11 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       name,
       about_me,
     };
-    let response = await this.patch<UserResponse<ErmisChatGenerics>>(this.baseURL + '/uss/v1/users/update', body, 'user');
+    let response = await this.patch<UserResponse<ErmisChatGenerics>>(
+      this.baseURL + '/uss/v1/users/update',
+      body,
+      'user',
+    );
     this.user = response;
     this._user = response;
     this.state.updateUser(response);
@@ -1673,6 +1697,10 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     });
 
     return this.hydrateActiveChannels(data.channels, stateOptions);
+  }
+
+  async startCall(payload: any) {
+    return this.post(this.baseURL + '/signal', payload);
   }
 
   /**
@@ -2901,16 +2929,19 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     const { params: axiosRequestConfigParams, headers: axiosRequestConfigHeaders, ...axiosRequestConfigRest } =
       this.options.axiosRequestConfig || {};
 
-    let user_service_params = server_type === 'user' ? {
-      ...options.params,
-      ...(axiosRequestConfigParams || {}),
-    } : {
-      user_id: this.userID,
-      connection_id: this._getConnectionID(),
-      api_key: this.key,
-      ...options.params,
-      ...(axiosRequestConfigParams || {}),
-    }
+    let user_service_params =
+      server_type === 'user'
+        ? {
+            ...options.params,
+            ...(axiosRequestConfigParams || {}),
+          }
+        : {
+            user_id: this.userID,
+            connection_id: this._getConnectionID(),
+            api_key: this.key,
+            ...options.params,
+            ...(axiosRequestConfigParams || {}),
+          };
 
     return {
       params: user_service_params,

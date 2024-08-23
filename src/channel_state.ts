@@ -149,7 +149,7 @@ export class ChannelState<ErmisChatGenerics extends ExtendableGenerics = Default
       // parse the date..
       pinned_at: message.pinned_at ? new Date(message.pinned_at) : null,
       created_at: message.created_at ? new Date(message.created_at) : new Date(),
-      updated_at: message.updated_at ? new Date(message.updated_at) : new Date(),
+      updated_at: message.updated_at ? new Date(message.updated_at) : null,
       status: message.status || 'received',
     };
   }
@@ -352,12 +352,12 @@ export class ChannelState<ErmisChatGenerics extends ExtendableGenerics = Default
 
   removeQuotedMessageReferences(message: MessageResponse<ErmisChatGenerics>) {
     const parseMessage = (m: ReturnType<ChannelState<ErmisChatGenerics>['formatMessage']>) =>
-    (({
-      ...m,
-      created_at: m.created_at.toISOString(),
-      pinned_at: m.pinned_at?.toISOString(),
-      updated_at: m.updated_at?.toISOString(),
-    } as unknown) as MessageResponse<ErmisChatGenerics>);
+      (({
+        ...m,
+        created_at: m.created_at.toISOString(),
+        pinned_at: m.pinned_at?.toISOString(),
+        updated_at: m.updated_at?.toISOString(),
+      } as unknown) as MessageResponse<ErmisChatGenerics>);
 
     this.messageSets.forEach((set) => {
       const updatedMessages = set.messages

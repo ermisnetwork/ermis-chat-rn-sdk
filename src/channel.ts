@@ -178,6 +178,12 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
     });
   }
 
+  async editMessage(messageID: string, text: string) {
+    return await this.getClient().post(this.getClient().baseURL + `/messages/${this.type}/${this.id}/${messageID}`, {
+      text,
+    });
+  }
+
   sendFile(
     uri: string | NodeJS.ReadableStream | Buffer | File,
     name?: string,
@@ -320,7 +326,7 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
     }
     const react_type = reaction.type;
     return await this.getClient().post<ReactionAPIResponse<ErmisChatGenerics>>(
-      this.getClient().baseURL + `/messages/${this.type}/${this.id}/${messageID}/reaction/${react_type}`
+      this.getClient().baseURL + `/messages/${this.type}/${this.id}/${messageID}/reaction/${react_type}`,
     );
   }
 
@@ -333,11 +339,7 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
    *
    * @return {Promise<ReactionAPIResponse<ErmisChatGenerics>>} The Server Response
    */
-  deleteReaction(
-    messageID: string,
-    reactionType: string,
-    user_id?: string
-  ) {
+  deleteReaction(messageID: string, reactionType: string, user_id?: string) {
     this._checkInitialized();
     if (!reactionType || !messageID) {
       throw Error('Deleting a reaction requires specifying both the message and reaction type');
@@ -517,8 +519,28 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
    * @param {ChannelUpdateOptions} [options] Option object, configuration to control the behavior while updating
    * @return {Promise<UpdateChannelAPIResponse<ErmisChatGenerics>>} The server response
    */
-  async addModerators(members: string[], message?: Message<ErmisChatGenerics>, options: ChannelUpdateOptions = {}) {
-    return await this._update({ add_moderators: members, message, ...options });
+  // async addModerators(members: string[], message?: Message<ErmisChatGenerics>, options: ChannelUpdateOptions = {}) {
+  //   return await this._update({ add_moderators: members, message, ...options });
+  // }
+
+  async addModerators(members: string[]) {
+    return await this._update({ promote_members: members });
+  }
+
+  async banMembers(members: string[]) {
+    return await this._update({ ban_members: members });
+  }
+
+  async unbanMembers(members: string[]) {
+    return await this._update({ unban_members: members });
+  }
+
+  async updateCapabilities(add_capabilities: string[], remove_capabilities: string[]) {
+    return await this._update({ add_capabilities, remove_capabilities });
+  }
+
+  async queryAttachmentMessages() {
+    return await this.getClient().post(this.getClient().baseURL + `/channels/${this.type}/${this.id}/attachment`);
   }
 
   /**
@@ -573,8 +595,12 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
    * @param {ChannelUpdateOptions} [options] Option object, configuration to control the behavior while updating
    * @return {Promise<UpdateChannelAPIResponse<ErmisChatGenerics>>} The server response
    */
-  async demoteModerators(members: string[], message?: Message<ErmisChatGenerics>, options: ChannelUpdateOptions = {}) {
-    return await this._update({ demote_moderators: members, message, ...options });
+  // async demoteModerators(members: string[], message?: Message<ErmisChatGenerics>, options: ChannelUpdateOptions = {}) {
+  //   return await this._update({ demote_moderators: members, message, ...options });
+  // }
+
+  async demoteModerators(members: string[]) {
+    return await this._update({ demote_members: members });
   }
 
   /**
