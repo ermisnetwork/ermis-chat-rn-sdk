@@ -684,9 +684,9 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
    * @param {string} [parent_id] set this field to `message.id` to indicate that typing event is happening in a thread
    */
   async keystroke(parent_id?: string, options?: { user_id: string }) {
-    if (!this._isTypingIndicatorsEnabled()) {
-      return;
-    }
+    // if (!this._isTypingIndicatorsEnabled()) {
+    //   return;
+    // }
     const now = new Date();
     const diff = this.lastTypingEvent && now.getTime() - this.lastTypingEvent.getTime();
     this.lastKeyStroke = now;
@@ -707,9 +707,9 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
    * @param {string} [parent_id] set this field to `message.id` to indicate that typing event is happening in a thread
    */
   async stopTyping(parent_id?: string, options?: { user_id: string }) {
-    if (!this._isTypingIndicatorsEnabled()) {
-      return;
-    }
+    // if (!this._isTypingIndicatorsEnabled()) {
+    //   return;
+    // }
     this.lastTypingEvent = null;
     this.isTyping = false;
     await this.sendEvent({
@@ -756,9 +756,9 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
   async markRead(data: MarkReadOptions<ErmisChatGenerics> = {}) {
     this._checkInitialized();
 
-    if (!this.getConfig()?.read_events && !this.getClient()._isUsingServerAuth()) {
-      return Promise.resolve(null);
-    }
+    // if (!this.getConfig()?.read_events && !this.getClient()._isUsingServerAuth()) {
+    //   return Promise.resolve(null);
+    // }
 
     return await this.getClient().post<EventAPIResponse<ErmisChatGenerics>>(this._channelURL() + '/read', {
       ...data,
