@@ -109,7 +109,7 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
     data: ChannelData<ErmisChatGenerics>,
   ) {
     const validTypeRe = /^[\w_-]+$/;
-    const validIDRe = /^[\w!]+$/;
+    const validIDRe = /^[\w!:_-]+$/;
 
     if (!validTypeRe.test(type)) {
       throw new Error(`Invalid chat type ${type}, letters, numbers and "_-" are allowed`);

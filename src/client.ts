@@ -410,7 +410,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     this.logger = isFunction(inputOptions.logger) ? inputOptions.logger : () => null;
     this.recoverStateOnReconnect = this.options.recoverStateOnReconnect;
     this.chains = {
-      chain: [],
+      chains: [],
       joined: [],
       not_joined: [],
     }

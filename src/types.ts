@@ -3149,7 +3149,7 @@ export type ChainProjectResponse<ErmisChatGenerics extends ExtendableGenerics = 
 }
 
 export type ChainsResponse<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
-  chain: number[];
+  chains: number[];
   joined: ChainProjectResponse<ErmisChatGenerics>[];
   not_joined: ChainProjectResponse<ErmisChatGenerics>[];
 }
