@@ -1488,7 +1488,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   _sayHi() {
     const client_request_id = randomId();
     const opts = { headers: { 'x-client-request-id': client_request_id } };
-    this.doAxiosRequest('chat', 'get', this.baseURL + '/hi', null, opts).catch((e) => {});
+    this.doAxiosRequest('chat', 'get', this.baseURL + '/hi', null, opts).catch((e) => { });
   }
 
   /**
@@ -1559,7 +1559,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   }
   async queryContacts(projectID?: string): Promise<ContactResponse> {
     let project_id = projectID || this.project_id;
-    return await this.get<ContactResponse>(this.baseURL + '/contacts/list', { project_id }, 'user');
+    return await this.post<ContactResponse>(this.baseURL + '/contacts/list', { project_id }, 'user');
   }
   async getChains(): Promise<ChainsResponse> {
     let chain_response = await this.get<ChainsResponse>(this.baseURL + '/uss/v1/users/chains', undefined, 'user');
@@ -2932,16 +2932,16 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     let user_service_params =
       server_type === 'user'
         ? {
-            ...options.params,
-            ...(axiosRequestConfigParams || {}),
-          }
+          ...options.params,
+          ...(axiosRequestConfigParams || {}),
+        }
         : {
-            user_id: this.userID,
-            connection_id: this._getConnectionID(),
-            api_key: this.key,
-            ...options.params,
-            ...(axiosRequestConfigParams || {}),
-          };
+          user_id: this.userID,
+          connection_id: this._getConnectionID(),
+          api_key: this.key,
+          ...options.params,
+          ...(axiosRequestConfigParams || {}),
+        };
 
     return {
       params: user_service_params,
