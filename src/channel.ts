@@ -313,20 +313,12 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
    *
    * @return {Promise<ReactionAPIResponse<ErmisChatGenerics>>} The Server Response
    */
-  async sendReaction(
-    messageID: string,
-    reaction: Reaction<ErmisChatGenerics>,
-    options?: { enforce_unique?: boolean; skip_push?: boolean },
-  ) {
+  async sendReaction(messageID: string, reactionType: string) {
     if (!messageID) {
       throw Error(`Message id is missing`);
     }
-    if (!reaction || Object.keys(reaction).length === 0) {
-      throw Error(`Reaction object is missing`);
-    }
-    const react_type = reaction.type;
     return await this.getClient().post<ReactionAPIResponse<ErmisChatGenerics>>(
-      this.getClient().baseURL + `/messages/${this.type}/${this.id}/${messageID}/reaction/${react_type}`,
+      this.getClient().baseURL + `/messages/${this.type}/${this.id}/${messageID}/reaction/${reactionType}`,
     );
   }
 
@@ -339,7 +331,7 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
    *
    * @return {Promise<ReactionAPIResponse<ErmisChatGenerics>>} The Server Response
    */
-  deleteReaction(messageID: string, reactionType: string, user_id?: string) {
+  deleteReaction(messageID: string, reactionType: string) {
     this._checkInitialized();
     if (!reactionType || !messageID) {
       throw Error('Deleting a reaction requires specifying both the message and reaction type');
