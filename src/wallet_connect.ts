@@ -46,6 +46,17 @@ export class WalletConnect<ErmisChatGenerics extends ExtendableGenerics = Defaul
         this.logger = isFunction(inputOptions.logger) ? inputOptions.logger : () => null;
         this.consecutiveFailures = 0;
     }
+
+    public static getInstance<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics>(
+        key: string,
+        address: string,
+        options?: ErmisChatOptions,
+    ): WalletConnect<ErmisChatGenerics> {
+        if (!WalletConnect._instance) {
+            WalletConnect._instance = new WalletConnect<ErmisChatGenerics>(key, address, options);
+        }
+        return WalletConnect._instance as WalletConnect<ErmisChatGenerics>;
+    };
     setBaseURL(baseURL: string) {
         this.baseURL = baseURL;
     }
