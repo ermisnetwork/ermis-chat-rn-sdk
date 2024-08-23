@@ -42,7 +42,8 @@ export class WalletConnect {
             });
         }
         this.axiosInstance = axios.create(this.options);
-        this.setBaseURL(this.options.baseURL + "/uss/v1" || 'https://api.ermis.network/uss/v1');
+        const base_url = this.options.baseURL ? this.options.baseURL + "/uss/v1" : 'https://api.ermis.network/uss/v1';
+        this.setBaseURL(base_url);
         this.logger = isFunction(inputOptions.logger) ? inputOptions.logger : () => null;
         this.consecutiveFailures = 0;
     }
