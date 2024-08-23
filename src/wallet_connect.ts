@@ -33,6 +33,7 @@ export class WalletConnect {
             withCredentials: false, // making sure cookies are not sent
             warmUp: false,
             recoverStateOnReconnect: true,
+            ...inputOptions,
         };
         if (this.node && !this.options.httpsAgent) {
             this.options.httpsAgent = new https.Agent({
