@@ -1,10 +1,9 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import { ErmisChat } from "client";
-import { APIErrorResponse, DefaultGenerics, ErmisChatOptions, ErrorFromResponse, ExtendableGenerics, GetTokenResponse, Logger, ServerType, StartAuthResponse } from "types";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"; ``
+import { APIErrorResponse, DefaultGenerics, ErmisChatOptions, ErrorFromResponse, ExtendableGenerics, GetTokenResponse, Logger, ServerType, StartAuthResponse } from "./types";
 import https from 'https';
-import { chatCodes, isFunction, randomId, retryInterval, sleep } from "utils";
-import { isErrorResponse } from "errors";
-export class WalletConnect<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics> {
+import { chatCodes, isFunction, randomId, retryInterval, sleep } from "./utils";
+import { isErrorResponse } from "./errors";
+export class WalletConnect {
     private static _instance?: unknown | WalletConnect;
 
     address: string;
@@ -51,11 +50,11 @@ export class WalletConnect<ErmisChatGenerics extends ExtendableGenerics = Defaul
         key: string,
         address: string,
         options?: ErmisChatOptions,
-    ): WalletConnect<ErmisChatGenerics> {
+    ) {
         if (!WalletConnect._instance) {
-            WalletConnect._instance = new WalletConnect<ErmisChatGenerics>(key, address, options);
+            WalletConnect._instance = new WalletConnect(key, address, options);
         }
-        return WalletConnect._instance as WalletConnect<ErmisChatGenerics>;
+        return WalletConnect._instance as WalletConnect;
     };
     setBaseURL(baseURL: string) {
         this.baseURL = baseURL;
@@ -246,20 +245,22 @@ export class WalletConnect<ErmisChatGenerics extends ExtendableGenerics = Defaul
             address: this.address,
         })
     };
-
-    async getAuth(signature: string, nonce: string) {
+    createNonce(length: number): string {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    };
+    async getAuth(signature: string): Promise<GetTokenResponse> {
+        let nonce = this.createNonce(20);
         return this.post(this.baseURL + "/wallets/auth", {
             address: this.address,
             signature,
             nonce,
-        })
-    };
-
-    async getToken(api_key?: string): Promise<GetTokenResponse> {
-        let key = api_key || this.key;
-        return this.get<GetTokenResponse>(this.baseURL + "/get_token", {
-            api_key: key,
-            address: this.address,
+            api_key: this.key,
         })
     };
 

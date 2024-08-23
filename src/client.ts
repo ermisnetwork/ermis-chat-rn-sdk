@@ -1451,7 +1451,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       return await this.wsConnection.connect(
         this.options.enableWSFallback ? this.defaultWSTimeoutWithFallback : this.defaultWSTimeout,
       );
-    } catch (err) {
+    } catch (err: any) {
       // run fallback only if it's WS/Network error and not a normal API error
       // make sure browser is online before even trying the longpoll
       if (this.options.enableWSFallback && isWSFailure(err) && isOnline()) {
