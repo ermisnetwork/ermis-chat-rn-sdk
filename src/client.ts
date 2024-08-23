@@ -1427,9 +1427,9 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       throw Error('clientID is not set');
     }
 
-    if (!this.wsConnection && (this.options.warmUp || this.options.enableInsights)) {
-      this._sayHi();
-    }
+    // if (!this.wsConnection && (this.options.warmUp || this.options.enableInsights)) {
+    //   this._sayHi();
+    // }
     // The StableWSConnection handles all the reconnection logic.
     if (this.options.wsConnection && this.node) {
       // Intentionally avoiding adding ts generics on wsConnection in options since its only useful for unit test purpose.
