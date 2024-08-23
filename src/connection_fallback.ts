@@ -70,7 +70,6 @@ export class WSConnectionFallback<ErmisChatGenerics extends ExtendableGenerics =
 
     try {
       const res = await this.client.doAxiosRequest<T>(
-        'chat',
         'get',
         (this.client.baseURL as string).replace(':3030', ':8900') + '/longpoll', // replace port if present for testing with local API
         undefined,
@@ -82,7 +81,7 @@ export class WSConnectionFallback<ErmisChatGenerics extends ExtendableGenerics =
 
       this.consecutiveFailures = 0; // always reset in case of no error
       return res;
-    } catch (err) {
+    } catch (err: any) {
       this.consecutiveFailures += 1;
 
       if (retry && isErrorRetryable(err)) {
@@ -108,7 +107,7 @@ export class WSConnectionFallback<ErmisChatGenerics extends ExtendableGenerics =
             this.client.dispatchEvent(data.events[i]);
           }
         }
-      } catch (err) {
+      } catch (err: any) {
         if (axios.isCancel(err)) {
           this._log(`_poll() - axios canceled request`);
           return;

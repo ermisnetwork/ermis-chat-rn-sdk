@@ -47,7 +47,7 @@ export class WalletConnect {
         this.consecutiveFailures = 0;
     }
 
-    public static getInstance<ErmisChatGenerics extends ExtendableGenerics = DefaultGenerics>(
+    public static getInstance(
         key: string,
         address: string,
         options?: ErmisChatOptions,
@@ -222,7 +222,7 @@ export class WalletConnect {
             this.options.axiosRequestConfig || {};
 
         let user_service_params = {
-            api_key: this.key,
+            // api_key: this.key,
             ...options.params,
             ...(axiosRequestConfigParams || {}),
         }

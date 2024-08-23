@@ -1009,7 +1009,6 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   }
 
   doAxiosRequest = async <T>(
-    server_type: ServerType,
     type: string,
     url: string,
     data?: unknown,
@@ -1019,7 +1018,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   ): Promise<T> => {
     await this.tokenManager.tokenReady();
 
-    const requestConfig = this._enrichAxiosOptions(server_type, options);
+    const requestConfig = this._enrichAxiosOptions(options);
 
     try {
       let response: AxiosResponse<T>;
@@ -1064,7 +1063,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
             await sleep(retryInterval(this.consecutiveFailures));
           }
           this.tokenManager.loadToken();
-          return await this.doAxiosRequest<T>(server_type, type, url, data, requestConfig);
+          return await this.doAxiosRequest<T>(type, url, data, requestConfig);
         }
         return this.handleResponse(e.response);
       } else {
@@ -1073,24 +1072,24 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     }
   };
 
-  get<T>(url: string, params?: AxiosRequestConfig['params'], server_type: ServerType = 'chat') {
-    return this.doAxiosRequest<T>(server_type, 'get', url, null, { params });
+  get<T>(url: string, params?: AxiosRequestConfig['params']) {
+    return this.doAxiosRequest<T>('get', url, null, { params });
   }
 
-  put<T>(url: string, data?: unknown, server_type: ServerType = 'chat') {
-    return this.doAxiosRequest<T>(server_type, 'put', url, data);
+  put<T>(url: string, data?: unknown) {
+    return this.doAxiosRequest<T>('put', url, data);
   }
 
-  post<T>(url: string, data?: unknown, params?: AxiosRequestConfig['params'], server_type: ServerType = 'chat') {
-    return this.doAxiosRequest<T>(server_type, 'post', url, data, { params });
+  post<T>(url: string, data?: unknown, params?: AxiosRequestConfig['params']) {
+    return this.doAxiosRequest<T>('post', url, data, { params });
   }
 
-  patch<T>(url: string, data?: unknown, server_type: ServerType = 'chat') {
-    return this.doAxiosRequest<T>(server_type, 'patch', url, data);
+  patch<T>(url: string, data?: unknown) {
+    return this.doAxiosRequest<T>('patch', url, data);
   }
 
-  delete<T>(url: string, params?: AxiosRequestConfig['params'], server_type: ServerType = 'chat') {
-    return this.doAxiosRequest<T>(server_type, 'delete', url, null, { params });
+  delete<T>(url: string, params?: AxiosRequestConfig['params']) {
+    return this.doAxiosRequest<T>('delete', url, null, { params });
   }
 
   sendFile(
@@ -1103,7 +1102,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     const data = addFileToFormData(uri, name, contentType || 'multipart/form-data');
     if (user != null) data.append('user', JSON.stringify(user));
 
-    return this.doAxiosRequest<SendFileAPIResponse>('chat', 'postForm', url, data, {
+    return this.doAxiosRequest<SendFileAPIResponse>('postForm', url, data, {
       headers: data.getHeaders ? data.getHeaders() : {}, // node vs browser
       config: {
         timeout: 0,
@@ -1488,7 +1487,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   _sayHi() {
     const client_request_id = randomId();
     const opts = { headers: { 'x-client-request-id': client_request_id } };
-    this.doAxiosRequest('chat', 'get', this.baseURL + '/hi', null, opts).catch((e) => { });
+    this.doAxiosRequest('get', this.baseURL + '/hi', null, opts).catch((e) => { });
   }
 
   /**
@@ -1523,8 +1522,7 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
         request_project_id,
         page,
         page_size,
-      },
-      'user',
+      }
     );
 
     this.state.updateUsers(data.data);
@@ -1536,7 +1534,6 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     return await this.get<UserResponse<ErmisChatGenerics>>(
       this.baseURL + '/uss/v1/users/' + user_id,
       undefined,
-      'user',
     );
   }
   async getBatchUsers(users: string[], page?: number, page_size?: number, project_id?: string): Promise<UsersResponse> {
@@ -1545,7 +1542,6 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       this.baseURL + '/uss/v1/users/batch',
       { users, project_id: request_project_id },
       { page, page_size },
-      'user',
     );
   }
   async searchUsers(page: number, page_size: number, name?: string, project_id?: string): Promise<UsersResponse> {
@@ -1554,15 +1550,14 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
       this.baseURL + '/uss/v1/users/search',
       undefined,
       { page, page_size, name, project_id: request_project_id },
-      'user',
     );
   }
   async queryContacts(projectID?: string): Promise<ContactResponse> {
     let project_id = projectID || this.project_id;
-    return await this.post<ContactResponse>(this.baseURL + '/contacts/list', { project_id }, 'user');
+    return await this.post<ContactResponse>(this.baseURL + '/contacts/list', { project_id },);
   }
   async getChains(): Promise<ChainsResponse> {
-    let chain_response = await this.get<ChainsResponse>(this.baseURL + '/uss/v1/users/chains', undefined, 'user');
+    let chain_response = await this.get<ChainsResponse>(this.baseURL + '/uss/v1/users/chains');
     this.chains = chain_response;
     return chain_response;
   }
@@ -1581,7 +1576,6 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
           'Content-Type': 'multipart/form-data',
         },
       },
-      'user',
     );
     if (this.user) {
       this.user.avatar = response.avatar;
@@ -1601,7 +1595,6 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     let response = await this.patch<UserResponse<ErmisChatGenerics>>(
       this.baseURL + '/uss/v1/users/update',
       body,
-      'user',
     );
     this.user = response;
     this._user = response;
@@ -2896,18 +2889,14 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
   _isUsingServerAuth = () => !!this.secret;
 
   _enrichAxiosOptions(
-    server_type: ServerType,
     options: AxiosRequestConfig & { config?: AxiosRequestConfig } = {
       params: {},
       headers: {},
       config: {},
     },
   ): AxiosRequestConfig {
-    if (!['chat', 'user', 'wallet'].includes(server_type)) {
-      throw new Error(`Invalid server_type: ${server_type}`);
-    }
 
-    let token = server_type === 'wallet' ? undefined : this._getToken();
+    let token = this._getToken();
 
     if (!token?.startsWith('Bearer ')) {
       token = `Bearer ${token}`;
@@ -2929,19 +2918,10 @@ export class ErmisChat<ErmisChatGenerics extends ExtendableGenerics = DefaultGen
     const { params: axiosRequestConfigParams, headers: axiosRequestConfigHeaders, ...axiosRequestConfigRest } =
       this.options.axiosRequestConfig || {};
 
-    let user_service_params =
-      server_type === 'user'
-        ? {
-          ...options.params,
-          ...(axiosRequestConfigParams || {}),
-        }
-        : {
-          user_id: this.userID,
-          connection_id: this._getConnectionID(),
-          api_key: this.key,
-          ...options.params,
-          ...(axiosRequestConfigParams || {}),
-        };
+    let user_service_params = {
+      ...options.params,
+      ...(axiosRequestConfigParams || {}),
+    }
 
     return {
       params: user_service_params,

@@ -70,7 +70,7 @@ export type Unpacked<T> = T extends (infer U)[]
  * Server Types
  * filter for api request config
  */
-export type ServerType = 'chat' | 'user' | 'wallet';
+export type ServerType = 'chat' | 'user';
 
 /**
  * Response Types
