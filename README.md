@@ -10,7 +10,6 @@
 1.  [Requirements](#requirements)
 1.  [Getting started](#getting-started)
 1.  [Sending your first message](#sending-your-first-message)
-1.  [Additional information](#additional-information)
 
 ## Introduction
 
@@ -44,11 +43,9 @@ The ErmisChat client is setup to allow extension of the base types through use o
 
 ### Step 1: Create a API key application from your dashboard
 
-Before installing ErmisChat SDK, you need to create a API key application on the [Ermis Dashboard](https://ermis.network). You will need the `Api key` of your Ermis application when initializing the Chat SDK.
+Before installing ErmisChat SDK, you need to create a API key on the [Ermis Dashboard](https://ermis.network). You will need the `Api key` of your Ermis application when initializing the Chat SDK.
 
 > **Note**: Ermis Dashboard coming soon
-
-<br />
 
 ### Step 2: Install the Chat SDK
 
@@ -57,7 +54,7 @@ You can install the Chat SDK with either `npm` or `yarn`.
 **npm**
 
 ```bash
-$ npm install ermis-js-sdk
+$ npm install ermis-chat-js-sdk
 ```
 
 > Note: To use npm to install the Chat SDK, Node.js must be first installed on your system.
@@ -65,7 +62,7 @@ $ npm install ermis-js-sdk
 **yarn**
 
 ```bash
-$ yarn add ermis-js-sdk
+$ yarn add ermis-chat-js-sdk
 ```
 
 ### Step 3: Install the WalletConnect
@@ -77,8 +74,8 @@ You need to install WalletConnect to sign and login to Chat SDK. [WalletConnect 
 After install WalletConnect, you need import the ErmisAuth to Initialize.
 
 ```javascript
-import { ErmisAuth } from 'ermis-js-sdk';
-const authInstance = new ErmisAuth();
+import { WalletConnect } from 'ermis-chat-js-sdk';
+const authInstance = WalletConnect.getInstance(API_KEY, address);
 ```
 
 #### 4.1: Create challenge
@@ -86,7 +83,7 @@ const authInstance = new ErmisAuth();
 Create challenge message before sign wallet.
 
 ```javascript
-const challenge = await authInstance.createChallenge(address);
+const challenge = await authInstance.startAuth();
 ```
 
 #### 4.2: Sign wallet and get token
@@ -94,7 +91,7 @@ const challenge = await authInstance.createChallenge(address);
 After receiving the challenge message, you need to sign the wallet to get the signature use [useSignTypedData](https://wagmi.sh/react/api/hooks/useSignTypedData), then get token.
 
 ```javascript
-const response = await authInstance.getToken(api_key, address, signature);
+const response = await authInstance.getAuth(api_key, address, signature);
 ```
 
 ### Step 5: Import the Chat SDk
@@ -102,18 +99,21 @@ const response = await authInstance.getToken(api_key, address, signature);
 Client-side you initialize the Chat client with your API key
 
 ```javascript
-import { ErmisChat } from 'ermis-js-sdk';
-const chatClient = ErmisChat.getInstance(API_KEY);
+import { ErmisChat } from 'ermis-chat-js-sdk';
+const chatClient = ErmisChat.getInstance(API_KEY, {
+  timeout: 6000, // optional
+  baseURL: BASE_URL, // optional
+});
 ```
 
 Once initialized, you must specify the current user with connectUser:
 
 ```javascript
-await client.connectUser(
+await chatClient.connectUser(
   {
     api_key: API_KEY,
-    id: user_id, // your address
-    name: user_id,
+    id: address, // your address
+    name: address,
   },
   `Bearer ${token}`,
 );
@@ -124,142 +124,451 @@ await client.connectUser(
 ## Sending your first message
 
 Now that the Chat SDK has been imported, we're ready to start sending a message.
-
-### Authentication
-
-In order to use the features of the Chat SDK, you should initiate the `SendbirdChatSDK` instance through user authentication with Sendbird server. This instance communicates and interacts with the server based on an authenticated user account, and then the user’s client app can use the Chat SDK's features.
-
 Here are the steps to sending your first message using Chat SDK:
 
-### Step 4: Initialize the Chat SDK
+### Features:
 
-Before authentication, you need to intialize the SDK by calling `SendbirdChat.init`.
+1. [Users](#users)
+1. [Channels](#channels)
+1. [Messages](#messages)
+1. [Setting channel](#setting-channel)
+1. [Additional information](#additional-information)
 
-The `init` method requires an appId, which is available from your Sendbird dashboard.
+### Users
 
-To improve performance, this SDK is modular. You must import and provide the required modules when calling `init`.
+Get users in your project to create direct message.
+
+**1. Query users**
 
 ```javascript
-import SendbirdChat from '@sendbird/chat';
-import { OpenChannelModule } from '@sendbird/chat/openChannel';
+await chatClient.queryUsers(project_id, page_size, page);
+```
 
-const sb = SendbirdChat.init({
-  appId: APP_ID,
-  modules: [new OpenChannelModule()],
+| Name       | Type   | Required | Description                           |
+| :--------- | :----- | :------- | :------------------------------------ |
+| project_id | string | Yes      | Your project ID                       |
+| page       | number | No       | The page number you want to query     |
+| page_size  | number | No       | The number of users returned per page |
+
+**2. Search users**
+
+```javascript
+await chatClient.searchUsers(page, page_size, name, project_id);
+```
+
+| Name       | Type   | Required | Description                           |
+| :--------- | :----- | :------- | :------------------------------------ |
+| project_id | string | Yes      | Your project ID                       |
+| page       | number | No       | The page number you want to query     |
+| page_size  | number | No       | The number of users returned per page |
+| name       | string | Yes      | User name you want to query           |
+
+**3. Get users by userIds**
+
+```javascript
+await chatClient.getBatchUsers(users, page, page_size, project_id);
+```
+
+| Name       | Type   | Required | Description                           |
+| :--------- | :----- | :------- | :------------------------------------ |
+| project_id | string | Yes      | Your project ID                       |
+| page       | number | No       | The page number you want to query     |
+| page_size  | number | No       | The number of users returned per page |
+| users      | array  | Yes      | List user id you want to query        |
+
+**4. Get user by user id**
+
+```javascript
+await chatClient.queryUser(user_id);
+```
+
+**5. Update profile**
+
+```javascript
+await chatClient.updateProfile(name, about_me);
+```
+
+| Name     | Type   | Required | Description      |
+| :------- | :----- | :------- | :--------------- |
+| name     | string | Yes      | Your user name   |
+| about_me | string | No       | Your description |
+
+**6. Get contact**
+
+Your contact in project
+
+```javascript
+await chatClient.queryContacts(PROJECT_ID);
+```
+
+</br>
+
+### Channels
+
+**1. Query channels**
+
+Get channels in your project. Here’s an example of how you can query the list of channels:
+
+```javascript
+const filter = {
+  project_id: PROJECT_ID,
+  type: ['messaging', 'team'],
+  roles: ['owner', 'moder', 'member', 'pending'],
+  other_roles: ['pending'], // optional
+  limit: 3, // optional
+  offset: 0, // optional
+};
+const sort = [{ last_message_at: -1 }];
+const options = {
+  message_limit: 25,
+};
+
+await chatClient.queryChannels(filter, sort, options);
+```
+
+**Filter:**
+
+Type is object. The query filters to use. You can query on any of the custom fields you've defined on the Channel.
+| Name | Type | Required | Description |
+| :-----------| :-- | :---------| :-----------|
+| project_id | string | Yes | Your project ID
+| type | array | No | The type of channel: messaging, team. Array is empty will get all channels.
+| roles | array | No | This method is used to retrieve a list of channels that the current user is a part of. The API supports filtering channels based on the user's role within each channel, including roles such as `owner`, `moder`, `member`, and `pending`.</br><br />`owner` - Retrieves a list of channels where the user's role is the owner. <br />`moder` - Retrieves a list of channels where the user's role is the moderator. <br />`member` - Retrieves a list of channels where the user's role is a member. <br /> `pending` - Retrieves a list of channels where the user's role is pending approval.
+| other_roles | array | No | This API allows you to retrieve a list of channels that you have created, with the ability to filter channels based on the roles of other users within the channel. The roles available for filtering include: `owner`, `moder`, `member`, and `pending`.</br><br /> `owner` - Filter channels where the user is the channel owner.</br> `moder` - Filter channels where the user is a moderator.</br> `member` - Filter channels where the user is a member. </br> `pending` - Filter channels where the user is pending approval.
+| limit | integer | No | The maximum number of channels to retrieve in a single request.
+| offset | integer | No | The starting position for data retrieval. This parameter allows you to retrieve channels starting from a specific position, useful for paginating through results. For example, offset: 30 will start retrieving channels from position 31 in the list.
+
+**Sort:**
+
+Type is object or array of objects. The sorting used for the channels matching the filters. Sorting is based on field and direction, multiple sorting options can be provided. You can sort based on `last_message_at`. Direction can be ascending (1) or descending (-1).
+
+```javascript
+const sort = [{ last_message_at: -1 }];
+```
+
+**Options:**
+
+Type is object. This method can be used to fetch information about existing channels, including message counts, and other related details.
+| Name | Type | Required | Description |
+| :-----------| :--- | :---------| :-----------|
+| message_limit | integer | No | The maximum number of messages to retrieve from each channel. If this parameter is not provided, the default number of messages or no limit will be applied.
+
+```javascript
+const options = { message_limit: 25 };
+```
+
+**2. Create new channel**
+
+Create a channel: choose Direct for 1-1 (messaging) or Group (team) for multiple users.
+
+**New direct message:**
+
+```javascript
+// channel type is messaging
+const channel = await chatClient.channel('messaging', {
+  members: [userId, myUserId],
+});
+await channel.create({ project_id: PROJECT_ID });
+```
+
+**New group:**
+
+```javascript
+// channel type is team
+const channel = await chatClient.channel('team', channel_id, {
+  name: channel_name,
+  members: [user_ids],
+});
+// The channel_id is generated using a combination of a UUID and the project ID, formatted as projectid:uuid.
+
+const response = await channel.create({ project_id: PROJECT_ID });
+```
+
+**3. Accept/Reject invite**
+
+**Accept:**
+
+```javascript
+// initialize the channel
+const channel = chatClient.channel(channel_type, channel_id);
+
+// accept the invite
+await channel.acceptInvite();
+```
+
+**Reject:**
+
+```javascript
+// initialize the channel
+const channel = chatClient.channel(channel_type, channel_id);
+
+// accept the invite
+await channel.rejectInvite();
+```
+
+**4. Query a Channel**
+
+Qeries the channel state and returns members, watchers and messages
+
+```javascript
+const channel = chatClient.channel(channel_type, channel_id);
+await channel.query({ project_id: PROJECT_ID });
+```
+
+You can use conditional parameters to filter messages based on their message id.
+| Name | Type | Required | Description |
+| :---------| :----| :---------| :-----------|
+| id_lt | string | No | Filters messages with message id less than the specified value.
+| id_gt | string | No | Filters messages with message id greater than the specified value.
+| id_around | string | No | Filters messages around a specific message id, potentially including messages before and after that message id.
+
+**Example:**
+
+```javascript
+const messages = {
+  limit: 25,
+  id_lt: message_id,
+};
+
+const channel = chatClient.channel(channel_type, channel_id);
+await channel.query({
+  project_id: PROJECT_ID,
+  messages, // optional
 });
 ```
 
-### Step 5: Connect to Sendbird server
+</br>
 
-Once the SDK is initialized, your client app can then connect to the Sendbird server. If you attempt to call a Sendbird SDK method without connecting, an `ERR_CONNECTION_REQUIRED (800101)` error would return.
+### Messages
 
-Connect a user to Sendbird server either through a unique user ID or in combination with an access or session token. Sendbird prefers the latter method, as it ensures privacy with the user. The former is useful during the developmental phase or if your service doesn't require additional security.
-
-#### A. Using a unique user ID
-
-Connect a user to Sendbird server using their unique user ID. By default, Sendbird server can authenticate a user by a unique user ID. Upon request for a connection, the server queries the database to check for a match. Any untaken user ID is automatically registered as a new user to the Sendbird system, while an existing ID is allowed to log indirectly. The ID must be unique within a Sendbird application, such as a hashed email address or phone number in your service.
-
-This allows you to get up and running without having to go deep into the details of the token registration process, however make sure to enable enforcing tokens before launching as it is a security risk to launch without.
+**1. Send message**
 
 ```javascript
-// The USER_ID below should be unique to your Sendbird application.
-try {
-  const user = await sb.connect(USER_ID);
-  // The user is connected to Sendbird server.
-} catch (err) {
-  // Handle error.
-}
+await channel.sendMessage({
+  id: message_id,
+  text: 'Hello',
+  attachments: [],
+  quoted_message_id: '',
+});
 ```
 
-#### B. Using a combination of unique user ID and token
+| Name              | Type   | Required | Description                                                |
+| :---------------- | :----- | :------- | :--------------------------------------------------------- |
+| id                | string | Yes      | The message_id is generated using a combination of a UUID. |
+| text              | string | Yes      | Text that you want to send to the selected channel.        |
+| attachments       | array  | No       | A list of attachments (audio, videos, images, and files).  |
+| quoted_message_id | string | No       | Message id to a message when you quote another message.    |
 
-Sendbird prefers that users connect using an access or session token, as it ensures privacy and security for the users.
-When [Creating a user](https://sendbird.com/docs/chat/v3/platform-api/guides/user#2-create-a-user) you can choose to generate a users access token or session token.
-A comparison between an access tokens and session tokens can be found [here](https://sendbird.com/docs/chat/v3/platform-api/user/managing-session-tokens/issue-a-session-token).
-Once a token is issued, a user is required to provide the issued token in the `sb.connect()` method which is used for logging in.
-
-1. Using the Chat Platform API, create a Sendbird user with the information submitted when a user signs up your service.
-2. Save the user ID along with the issued access token to your persistent storage which is securely managed.
-3. When the user attempts to log in to the Sendbird application, load the user ID and access token from the storage, and then pass them to the `sb.connect()` method.
-4. Periodically replacing the user's access token is recommended to protect the account.
+**Attachmens format**
 
 ```javascript
-try {
-  const user = await sb.connect(USER_ID, ACCESS_TOKEN);
-  // The user is connected to Sendbird server.
-} catch (err) {
-  // Handle error.
-}
+const attachments = [
+  {
+    type: 'image', // Upload file image
+    image_url: 'https://bit.ly/2K74TaG',
+    title: 'photo.png',
+    file_size: 2020,
+    mime_type: 'image/png',
+  },
+  {
+    type: 'video', // Upload file video
+    asset_url: 'https://bit.ly/2K74TaG',
+    file_size: 10000,
+    mime_type: 'video/mp4',
+    title: 'video name',
+    thumb_url: 'https://bit.ly/2Uumxti',
+  },
+  {
+    type: 'file', // Upload another file
+    asset_url: 'https://bit.ly/3Agxsrt',
+    file_size: 2000,
+    mime_type: 'application/msword',
+    title: 'file name',
+  },
+];
 ```
 
-### Step 6: Create a new open channel
-
-Create an open channel in the following way. [Open channels](https://sendbird.com/docs/chat/v4/ios/guides/open-channel) are where all users in your Sendbird application can easily participate without an invitation.
+**2. Upload file**
 
 ```javascript
-try {
-  const params = new OpenChannelParams();
-  const channel = await sb.openChannel.createChannel(params);
-
-  // An open channel is successfully created.
-  // Channel data is return from a successful call to createChannel
-  ...
-} catch (err) {
-  // Handle error.
-}
+await channel.sendFile(file);
 ```
 
-### Step 7: Enter the channel
-
-Enter the channel to send and receive messages.
+**3. Edit message**
 
 ```javascript
-await channel.enter();
-// The current user successfully enters the open channel
-// and can chat with other users in the channel.
-...
+await channel.editMessage(message_id, text);
 ```
 
-### Step 8: Send a message to the channel
-
-Finally, send a message to the channel. There are [three types](https://sendbird.com/docs/chat/v4/platform-api/guides/messages#-3-resource-representation): a user message, which is a plain text, a file message, which is a binary file, such as an image or PDF, and an admin message, which is a plain text sent through the [dashboard](https://dashboard.sendbird.com/auth/signin) or [Chat Platform API](https://sendbird.com/docs/chat/v4/platform-api/guides/messages#2-send-a-message).
+**4. Delete message**
 
 ```javascript
-const params = new UserMessageParams();
-params.message = TEXT_MESSAGE;
-
-channel.sendUserMessage(params)
-  .onFailed((err: Error, message: UserMessage) => {
-    // Handle error.
-  })
-  .onSucceeded((message: UserMessage) => {
-    // The message is successfully sent to the channel.
-    // The current user can receive messages from other users through the onMessageReceived() method of the channel event handler.
-  ...
-  });
+await channel.deleteMessage(message_id);
 ```
 
-<br />
-
-## Additional information
-
-Sendbird wants customers to be confident that Chat SDK will be useful, work well, and fit within their needs. Thus, we have compiled a couple of optional guidelines. Take a few minutes to read and apply them at your convenience.
-
-### XSS prevention
-
-XSS (Cross-site scripting) is a type of computer security vulnerability. XSS helps attackers inject client-side scripts into web pages viewed by other users. Users can send any type of string data without restriction through Chat SDKs. Make sure that you check the safety of received data from other users before rendering it into your DOM.
-
-> **Note**: For more about the XSS prevention, visit the [OWASP's XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html) page.
-
-### Use functions of Sendbird objects with Immutable-js
-
-If you are using the [Immutable-js](https://immutable-js.github.io/immutable-js/) in your web app, instead of the `Immutable.Map()`, call the `Immutable.fromJS()` which converts deeply nested objects to an `Immutable Map`.
-So you can call the functions of Sendbird objects because the `fromJS()` method returns internal objects. But if you use a `Map` function, you can't call any functions of a Sendbird object.
+**5. Marking a channel as read**
+You can mark all messages in a channel as read like this on the client-side:
 
 ```javascript
-const userIds = ['John', 'Harry'];
+await channel.markRead();
+```
 
-const channel = await sb.groupChannel.createChannelWithUserIds(userIds, false, NAME, COVER_URL, DATA);
+**6. Reactions**
+The Reaction feature allows users to send, manage reactions on messages, and delete reactions when necessary.
 
-const immutableObject = Immutable.fromJS(channel);
+**Send reaction:**
+
+```javascript
+await channel.sendReaction(message_id, reaction_type);
+```
+
+**Delete reaction:**
+
+```javascript
+await channel.deleteReaction(message_id, reaction_type);
+```
+
+| Name          | Type   | Required | Description                                                                    |
+| :------------ | :----- | :------- | :----------------------------------------------------------------------------- |
+| message_id    | string | Yes      | ID of the message to react to                                                  |
+| reaction_type | string | Yes      | Type of the reaction. User could have only 1 reaction of each type per message |
+
+**7. Typing Indicators**
+Typing indicators allow you to show to users who is currently typing in the channel.
+
+```javascript
+// sends a typing.start event at most once every two seconds
+await channel.keystroke();
+
+// sends the typing.stop event
+await channel.stopTyping();
+```
+
+When sending events on user input, you should make sure to follow some best-practices to avoid bugs.
+
+- Only send `typing.start` when the user starts typing
+- Send `typing.stop` after a few seconds since the last keystroke
+
+**Receiving typing indicator events**
+
+```javascript
+// start typing event handling
+channel.on('typing.start', (event) => {
+  console.log(event);
+});
+
+// stop typing event handling
+channel.on('typing.stop', (event) => {
+  console.log(event);
+});
+```
+
+</br>
+
+### Setting channel
+
+The channel settings feature allows users to customize channel attributes such as name, description, membership permissions, and notification settings to suit their communication needs.
+
+**1. Edit channel (name, avatar, description)**
+
+```javascript
+const payload = { name, image, description };
+
+await channel.update(payload);
+```
+
+| Name        | Type   | Required | Description                  |
+| :---------- | :----- | :------- | :--------------------------- |
+| name        | string | Yes      | Display name for the channel |
+| image       | string | No       | Avatar for the channel       |
+| description | string | No       | Description for the channel  |
+
+**2. Adding & Removing Channel Members**
+Using the addMembers() method adds the given users as members, while removeMembers() removes them.
+
+**Adding members**
+
+```javascript
+await channel.addMembers(userIds);
+```
+
+**Removing members**
+
+```javascript
+await channel.removeMembers(userIds);
+```
+
+**Leaving a channel**
+
+```javascript
+await channel.removeMembers(['my_user_id']);
+```
+
+| Name    | Type  | Required | Description                                 |
+| :------ | :---- | :------- | :------------------------------------------ |
+| userIds | array | Yes      | List user id you want to adding or removing |
+
+**3. Adding & Removing Moderators to a Channel**
+Using the addModerators() method adds the given users as moderators (or updates their role to moderator if already members), while demoteModerators() removes the moderator status.
+
+**Adding moderators**
+
+```javascript
+await channel.addModerators(userIds);
+```
+
+**Removing moderators**
+
+```javascript
+await channel.demoteModerators(userIds);
+```
+
+| Name    | Type  | Required | Description                                 |
+| :------ | :---- | :------- | :------------------------------------------ |
+| userIds | array | Yes      | List user id you want to adding or removing |
+
+**4. Ban & Unban Channel Members**
+The ban and unban feature allows administrators to block or unblock members with the "member" role in the chat room, controlling their access rights.
+
+**Ban:**
+
+```javascript
+await channel.banMembers(userIds);
+```
+
+**Unban**
+
+```javascript
+await channel.unbanMembers(userIds);
+```
+
+| Name    | Type  | Required | Description                           |
+| :------ | :---- | :------- | :------------------------------------ |
+| userIds | array | Yes      | List user id you want to ban or unban |
+
+**5. Channel Capabilities**
+A feature that allows owner to configure permissions for members with the "member" role to send, edit, delete, and react to messages, ensuring chat content control.
+
+```javascript
+await channel.updateCapabilities(add_capabilities, remove_capabilities);
+```
+
+| Name                | Type  | Required | Description                       |
+| :------------------ | :---- | :------- | :-------------------------------- |
+| add_capabilities    | array | Yes      | Capabilities you want to adding   |
+| remove_capabilities | array | Yes      | Capabilities you want to removing |
+
+**Capabilities:**
+| Name | What it indicates
+| :---| :---
+| send-message | Ability to send a message
+| update-own-message | Ability to update own messages in the channel
+| delete-own-message | Ability to delete own messages from the channel
+| send-reaction | Ability to send reactions
+
+**6. Query Attachments in channel**
+The media message display feature allows users to view media files such as images, videos, and audio within the chat, enhancing the interaction experience without needing to send content.
+
+```javascript
+await channel.queryAttachmentMessages();
 ```
