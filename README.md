@@ -132,7 +132,7 @@ Here are the steps to sending your first message using Chat SDK:
 1. [Channels](#channels)
 1. [Messages](#messages)
 1. [Setting channel](#setting-channel)
-1. [Additional information](#additional-information)
+1. [Events](#events)
 
 ### Users
 
@@ -275,13 +275,11 @@ await channel.create({ project_id: PROJECT_ID });
 
 ```javascript
 // channel type is team
-const channel = await chatClient.channel('team', channel_id, {
+const channel = await chatClient.channel('team', {
   name: channel_name,
   members: [user_ids],
 });
-// The channel_id is generated using a combination of a UUID and the project ID, formatted as projectid:uuid.
-
-const response = await channel.create({ project_id: PROJECT_ID });
+await channel.create({ project_id: PROJECT_ID });
 ```
 
 **3. Accept/Reject invite**
@@ -571,4 +569,72 @@ The media message display feature allows users to view media files such as image
 
 ```javascript
 await channel.queryAttachmentMessages();
+```
+
+</br>
+
+### Events
+
+Events allow the client to stay up to date with changes to the chat. Examples are a new message, a reaction, or a member joining the channel.
+A full list of events is shown below. The next section of the documentation explains how to listen for events.
+| Event | Trigger | Recipients
+|:---|:----|:-----
+| `health.check` | every 30 second to confirm that the client connection is still alive | all clients
+| `message.new` | when a new message is added on a channel | clients watching the channel
+| `message.read` | when a channel is marked as read | clients watching the channel
+| `message.deleted` | when a message is deleted | clients watching the channel
+| `message.updated` | when a message is updated | clients watching the channel
+| `typing.start` | when a user starts typing | clients watching the channel
+| `typing.stop` | when a user stops typing | clients watching the channel
+| `reaction.new` | when a message reaction is added | clients watching the channel
+| `reaction.deleted` | when a message reaction is deleted | clients watching the channel
+| `member.added` | when a member is added to a channel | clients watching the channel
+| `member.removed` | when a member is removed from a channel | clients watching the channel
+| `member.promoted` | when a member is added moderator to a channel | clients watching the channel
+| `member.demoted` | when a member is removed moderator to a channel | clients watching the channel
+| `member.banned` | when a member is ban to a channel | clients watching the channel
+| `member.unbanned` | when a member is unban to a channel | clients watching the channel
+| `notification.added_to_channel` | when the user is added to the list of channel members | clients from the user added that are not watching the channel
+| `notification.invite_accepted` | when the user accepts an invite | clients from the user invited that are not watching the channel
+| `notification.invite_rejected` | when the user rejects an invite | clients from the user invited that are not watching the channel
+| `channel.deleted` | when a channel is deleted | clients watching the channel
+| `channel.updated` | when a channel is updated | clients watching the channel
+
+**1. Listening for Events**:
+As soon as you call watch on a Channel or queryChannels you’ll start to listen to these events. You can hook into specific events:
+
+```javascript
+channel.on('message.deleted', (event) => {
+  console.log('event', event);
+});
+```
+
+You can also listen to all events at once:
+
+```javascript
+channel.on((event) => {
+  console.log('event', event);
+});
+```
+
+**2. Client Events**:
+Not all events are specific to channels. Events such as the user's status has changed, the users' unread count has changed, and other notifications are sent as client events. These events can be listened to through the client directly:
+
+```javascript
+chatClient.on((event) => {
+  console.log('event', event);
+});
+```
+
+**3. Stop Listening for Events**:
+It is a good practice to unregister event handlers once they are not in use anymore. Doing so will save you from performance degradations coming from memory leaks or even from errors and exceptions (i.e. null pointer exceptions)
+
+```javascript
+// remove the handler from all client events
+// const myClientEventListener = client.on('connection.changed', myClientEventHandler)
+myClientEventListener.unsubscribe();
+
+// remove the handler from all events on a channel
+// const myChannelEventListener = channel.on('connection.changed', myChannelEventHandler)
+myChannelEventListener.unsubscribe();
 ```

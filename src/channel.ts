@@ -1,5 +1,5 @@
 import { ChannelState } from './channel_state';
-import { logChatPromiseExecution, normalizeQuerySort } from './utils';
+import { logChatPromiseExecution, normalizeQuerySort, randomId } from './utils';
 import { ErmisChat } from './client';
 import {
   APIResponse,
@@ -172,8 +172,10 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
    * @return {Promise<SendMessageAPIResponse<ErmisChatGenerics>>} The Server Response
    */
   async sendMessage(message: Message<ErmisChatGenerics>, options?: SendMessageOptions) {
+    const id = randomId();
+
     return await this.getClient().post<SendMessageAPIResponse<ErmisChatGenerics>>(this._channelURL() + '/message', {
-      message,
+      message: { ...message, id },
       ...options,
     });
   }
@@ -1031,6 +1033,12 @@ export class Channel<ErmisChatGenerics extends ExtendableGenerics = DefaultGener
     let queryURL = `${this.getClient().baseURL}/channels/${this.type}`;
     if (this.id) {
       queryURL += `/${this.id}`;
+    } else {
+      if (this.type === 'team') {
+        const uuid = randomId();
+        this.id = `${project_id}:${uuid}`;
+        queryURL += `/${this.id}`;
+      }
     }
 
     const state = await this.getClient().post<QueryChannelAPIResponse<ErmisChatGenerics>>(queryURL + '/query', {
