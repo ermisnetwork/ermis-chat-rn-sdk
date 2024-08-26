@@ -343,19 +343,17 @@ await channel.query({
 
 ```javascript
 await channel.sendMessage({
-  id: message_id,
   text: 'Hello',
   attachments: [],
   quoted_message_id: '',
 });
 ```
 
-| Name              | Type   | Required | Description                                                |
-| :---------------- | :----- | :------- | :--------------------------------------------------------- |
-| id                | string | Yes      | The message_id is generated using a combination of a UUID. |
-| text              | string | Yes      | Text that you want to send to the selected channel.        |
-| attachments       | array  | No       | A list of attachments (audio, videos, images, and files).  |
-| quoted_message_id | string | No       | Message id to a message when you quote another message.    |
+| Name              | Type   | Required | Description                                               |
+| :---------------- | :----- | :------- | :-------------------------------------------------------- |
+| text              | string | Yes      | Text that you want to send to the selected channel.       |
+| attachments       | array  | No       | A list of attachments (audio, videos, images, and files). |
+| quoted_message_id | string | No       | Message id to a message when you quote another message.   |
 
 **Attachmens format**
 
@@ -404,11 +402,35 @@ await channel.editMessage(message_id, text);
 await channel.deleteMessage(message_id);
 ```
 
-**5. Marking a channel as read**
+**5. Unread messages**
+The Unread Message Count feature shows users how many messages they missed while offline. Once they reconnect or log into the app again, they can get the number of messages published in a given channel while they were gone.
+
+**Get unread messages count (all channels)**
+`getUnreadCount()` returns info on all messages you didn't read on all joined channels. You can display this number on UI in the channel list of your chat app.
+
+```javascript
+await chatClient.getUnreadCount(userId);
+```
+
+**Marking a channel as read**
 You can mark all messages in a channel as read like this on the client-side:
 
 ```javascript
 await channel.markRead();
+```
+
+**Jump to last read message**
+This is how you can jump to the last read message inside a given channel:
+
+```javascript
+
+const channel = chatClient.channel(channel_type, channel_id);
+await channel.query({ project_id: PROJECT_ID });
+
+const lastReadMessageId = channel.state.read['<user id>'];
+await channel.state.loadMessageIntoState(lastReadMessageId);
+
+console.log(channel.state.messages);
 ```
 
 **6. Reactions**
